@@ -1,11 +1,12 @@
-import { ReactNode, createContext, useState } from "react";
-import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { ReactNode, createContext, useEffect, useState } from "react";
+// import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { Importance } from "../../../constants";
+import axios from "axios";
 
-const LOCAL_STORAGE_TASKS = {
-  KEY: "taskies",
-  DEFAULT: []
-};
+// const LOCAL_STORAGE_TASKS = {
+//   KEY: "taskies",
+//   DEFAULT: []
+// };
 
 const SORTING_VALUES = ["ascend", "descend", undefined] as const;
 
@@ -40,10 +41,21 @@ interface TasksContext {
 export const Context = createContext<TasksContext>({} as TasksContext);
 
 export function TasksProvider({ children }: { children: ReactNode }) {
-  const [tasks, setTasks] = useLocalStorage<Task[]>(
-    LOCAL_STORAGE_TASKS.KEY,
-    LOCAL_STORAGE_TASKS.DEFAULT
-  );
+  // const [tasks, setTasks] = useLocalStorage<Task[]>(
+  //   LOCAL_STORAGE_TASKS.KEY,
+  //   LOCAL_STORAGE_TASKS.DEFAULT
+  // );
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/")
+      .then((tasks) => {
+        setTasks(tasks.data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   const [areFinishedTasksHidden, setAreFinishedTasksHidden] =
     useState<boolean>(false);
   const [importanceFilter, setImportanceFilter] = useState<SortingValues>();
