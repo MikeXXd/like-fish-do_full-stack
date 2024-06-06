@@ -12,5 +12,4 @@ const TaskSchema = new mongoose.Schema({
   timeStamp: Date,
 });
 
-const TaskModel = mongoose.model("tasks", TaskSchema);
-module.exports = TaskModel;
+module.exports = mongoose.model("Tasks", TaskSchema)

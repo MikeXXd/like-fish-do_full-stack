@@ -61,8 +61,19 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const [importanceFilter, setImportanceFilter] = useState<SortingValues>();
   const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
 
+  // function addTask(task: Task) {
+  //   setTasks([task, ...tasks]);
+  // }
   function addTask(task: Task) {
-    setTasks([task, ...tasks]);
+    console.log("before posting", task);
+    axios
+      .post("http://localhost:3001/", task)
+      .then((res) => {
+        const data = res.data;
+        console.log("Task added successfully", data);
+        setTasks([...tasks, data]);
+      })
+      .catch((error) => console.log(error));
   }
 
   function taskDone(taskDone: Task) {
