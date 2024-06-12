@@ -36,6 +36,18 @@ app.delete("/", (req, res) => {
     .catch((err) => res.json(err));
 });
 
+app.put("/", (req, res) => {
+  const taskId = req.body.id;
+  const taskData = req.body;
+  Tasks.findByIdAndUpdate(taskId, taskData)
+    .then(() => {
+      Tasks.find()
+        .then((tasks) => res.json(tasks))
+        .catch((err) => res.json(err));
+    })
+    .catch((err) => res.json(err));
+});
+
 app.listen(3001, () => {
   console.log("Server has started!");
 });

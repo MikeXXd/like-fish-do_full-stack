@@ -19,7 +19,7 @@ export interface Task {
   done: boolean;
   star: boolean;
   timeStamp: Date;
-  // finishedAt: Date;
+  finishedAt?: Date;
 }
 
 interface TasksContext {
@@ -27,7 +27,6 @@ interface TasksContext {
   addTask: (task: Task) => void;
   taskDone: (task: Task) => void;
   editTask: (task: Task) => void;
-  setTaskImportance: (_id: string, importance: Importance) => void;
   deleteTask: (task: Task) => void;
   filterFinishedTasks: () => void;
   areFinishedTasksHidden: boolean;
@@ -60,6 +59,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     axios
       .post("http://localhost:3001/", task)
       .then((res) => {
+        // Optimistic update
         const data = res.data;
         setTasks([...tasks, data]);
       })
@@ -67,39 +67,41 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }
 
   function deleteTask(DeleteTask: Task) {
-    console.log("DeleteTaskId", DeleteTask._id);
     axios
       .delete("http://localhost:3001/", { data: { id: DeleteTask._id } })
       .then(() => {
-        console.log("Task deleted successfully");
+        // Optimistic update
+        setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
       })
       .catch((error) => console.log(error));
   }
 
-  function taskDone(taskDone: Task) {
-    setTasks(
-      tasks.map((task) =>
-        task._id === taskDone._id
-          ? { ...task, done: !task.done, star: false }
-          : task
-      )
-    );
+  function editTask(task: Task) {
+    axios
+      .put("http://localhost:3001/", { id: task._id, ...task })
+      .then(() => {
+        // Optimistic update
+        const updatedTasks = tasks.map((t) => (t._id === task._id ? task : t));
+        setTasks(updatedTasks);
+      })
+      .catch((error) => console.log(error));
   }
 
-  // function deleteTask(DeleteTask: Task) {
-  //   setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
-  // }
-
-  function editTask(updatingTask: Task) {
+  function taskDone(editingTask: Task) {
+    const newStatus = !editingTask.done;
+    // task marked as done, consequently not starred and finished time added(that will cause deleting of the task in 24 hours(taking care by mongodb) if not unmarked by the time)
+    const taskChanged = {
+      ...editingTask,
+      done: newStatus,
+      star: false,
+      finishedAt: new Date()
+    };
+    editTask(taskChanged);
+    // Optimistic update
     const updatedTasks = tasks.map((task) =>
-      task._id === updatingTask._id ? updatingTask : task
-    );
-    setTasks(updatedTasks);
-  }
-
-  function setTaskImportance(_id: string, importance: Importance) {
-    const updatedTasks = tasks.map((task) =>
-      task._id === _id ? { ...task, importance: importance } : task
+      task._id === editingTask._id
+        ? { ...task, done: newStatus, star: false }
+        : task
     );
     setTasks(updatedTasks);
   }
@@ -108,12 +110,15 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setAreFinishedTasksHidden((value) => !value);
   }
 
-  function arrangeStarForTask(taskStar: Task) {
-    setTasks(
-      tasks.map((task) =>
-        task._id === taskStar._id ? { ...task, star: !task.star } : task
-      )
+  function arrangeStarForTask(editingTask: Task) {
+    const newStatus = !editingTask.star;
+    const taskChanged = { ...editingTask, star: newStatus };
+    editTask(taskChanged);
+    // Optimistic update
+    const updatedTasks = tasks.map((task) =>
+      task._id === editingTask._id ? { ...task, star: newStatus } : task
     );
+    setTasks(updatedTasks);
   }
 
   function filterByImportance(importance: SortingValues = undefined) {
@@ -131,7 +136,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         taskDone,
         deleteTask,
         editTask,
-        setTaskImportance,
         filterFinishedTasks,
         areFinishedTasksHidden,
         arrangeStarForTask,

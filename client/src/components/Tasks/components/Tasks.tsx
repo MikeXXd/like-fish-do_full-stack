@@ -12,7 +12,7 @@ import useTasks from "../hooks/useTasks";
 import { FilterBar } from "./FilterBar";
 import TaskList from "./TaskList";
 
-type NewTask = Omit<Task, 'id'>
+type NewTask = Omit<Task, "id">;
 
 export default function Tasks() {
   const { addTask, filterByImportance } = useTasks();

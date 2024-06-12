@@ -9,6 +9,11 @@ const TaskSchema = new mongoose.Schema({
   done: Boolean,
   star: Boolean,
   timeStamp: Date,
+  finishedAt: {
+    type: Date,
+    default: undefined
+  },
+  
 });
 
 module.exports = mongoose.model("Tasks", TaskSchema)

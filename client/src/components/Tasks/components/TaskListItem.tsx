@@ -53,15 +53,12 @@ export function TaskListItem({ task }: Props) {
   });
 
   function onSubmit(data: FieldValues) {
-    const newTask: Task = {
-      id: task.id, //not changing
+    const editedTask: Task = {
+      ...task,
       title: data.title,
-      importance: data.importance,
-      star: data.star, //not changing
-      done: data.done, //not changing
-      timeStamp: task.timeStamp //not changing
+      importance: data.importance
     };
-    editTask(newTask);
+    editTask(editedTask);
     filterByImportance(undefined);
     methodes.reset();
     setIsModalOpen(false);
@@ -115,9 +112,11 @@ export function TaskListItem({ task }: Props) {
   return (
     <>
       <li
-        key={task.id}
+        key={task._id}
         className={cc(
-          " flex justify-between items-center gap-4 p-2 hover:bg-slate-200"
+          " flex justify-between items-center m-1 gap-4 p-2",
+          isTaskDeleting && "bg-red-300",
+          isTaskDeleting ? "hover:bg-red-400" : "hover:bg-slate-200"
         )}
       >
         {/* --Normal-mode------------------------------------------------ */}
@@ -126,8 +125,10 @@ export function TaskListItem({ task }: Props) {
             {/*--left-side------------------------------------------------ */}
             <span
               className={cc(
-                task.done && "line-through whitespace-break-spaces",
-                task.star && "font-medium",
+                task.done
+                  ? "line-through whitespace-break-spaces"
+                  : "font-bold",
+                task.star && "font-bold text-2xl text-yellow-600",
                 "me-5 w-full text-ellipsis overflow-hidden"
               )}
             >
@@ -265,7 +266,7 @@ export function TaskListItem({ task }: Props) {
           <>
             <button
               onClick={() => deleteTask(task)}
-              className="hover:scale-125 transition-transform"
+              className=" hover:scale-125 transition-transform"
             >
               <Trash2 size={TASK_ICON_SIZE} />
             </button>

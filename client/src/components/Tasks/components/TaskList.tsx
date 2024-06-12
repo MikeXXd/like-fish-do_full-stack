@@ -10,7 +10,7 @@ const TaskList = ({ searchName }: TaskListProps) => {
   const { tasks, areFinishedTasksHidden, importanceFilter, timeFilterState } =
     useTasks();
 
-    console.log('tasks', tasks)
+  console.log("tasks", tasks);
 
   const tasksFilteredByName = filterBySearchedName<Task>(tasks, searchName);
 
