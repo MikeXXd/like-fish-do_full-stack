@@ -117,13 +117,7 @@ export function TaskListItem({ task }: Props) {
       <li
         key={task.id}
         className={cc(
-          " flex justify-between items-center gap-4 p-2",
-          isTaskDeleting ? "hover:bg-red-300" : "hover:bg-slate-200",
-          isTaskDeleting && "bg-red-200 animate-pulse",
-          isNewTask && "bg-green-200 animate-pulse",
-          isNewTask ? "hover:bg-green-200" : "hover:bg-slate-200",
-          isTaskChanging && "bg-yellow-300 animate-pulse",
-          isTaskChanging ? "hover:bg-yellow-300" : "hover:bg-slate-200"
+          " flex justify-between items-center gap-4 p-2 hover:bg-slate-200"
         )}
       >
         {/* --Normal-mode------------------------------------------------ */}

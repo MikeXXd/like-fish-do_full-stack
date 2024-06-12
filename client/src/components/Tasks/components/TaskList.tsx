@@ -10,6 +10,8 @@ const TaskList = ({ searchName }: TaskListProps) => {
   const { tasks, areFinishedTasksHidden, importanceFilter, timeFilterState } =
     useTasks();
 
+    console.log('tasks', tasks)
+
   const tasksFilteredByName = filterBySearchedName<Task>(tasks, searchName);
 
   const tasksSortedByTime = sortTasksByTime({
@@ -34,7 +36,7 @@ const TaskList = ({ searchName }: TaskListProps) => {
     <div className="container overflow-auto px-auto">
       <ul className="list-none divide-y-2 divide-dashed divide-slate-500 rounded-md transition-all ease-in-out duration-300">
         {filteredTasks.map((task) => (
-          <TaskListItem key={task.id} task={task} />
+          <TaskListItem key={task._id} task={task} />
         ))}
       </ul>
     </div>

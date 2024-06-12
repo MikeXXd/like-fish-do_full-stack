@@ -12,6 +12,8 @@ import useTasks from "../hooks/useTasks";
 import { FilterBar } from "./FilterBar";
 import TaskList from "./TaskList";
 
+type NewTask = Omit<Task, 'id'>
+
 export default function Tasks() {
   const { addTask, filterByImportance } = useTasks();
   const [search, setSearch] = useState<string>("");
@@ -21,8 +23,7 @@ export default function Tasks() {
   const errors = methods.formState.errors;
 
   function onSubmit(data: FieldValues) {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
+    const newTask: NewTask = {
       title: data.title,
       importance: data.importance,
       star: false,

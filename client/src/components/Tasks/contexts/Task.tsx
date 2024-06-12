@@ -13,7 +13,7 @@ const SORTING_VALUES = ["ascend", "descend", undefined] as const;
 export type SortingValues = (typeof SORTING_VALUES)[number];
 
 export interface Task {
-  id: string;
+  _id?: string;
   title: string;
   importance: Importance;
   done: boolean;
@@ -27,7 +27,7 @@ interface TasksContext {
   addTask: (task: Task) => void;
   taskDone: (task: Task) => void;
   editTask: (task: Task) => void;
-  setTaskImportance: (id: string, importance: Importance) => void;
+  setTaskImportance: (_id: string, importance: Importance) => void;
   deleteTask: (task: Task) => void;
   filterFinishedTasks: () => void;
   areFinishedTasksHidden: boolean;
@@ -41,11 +41,11 @@ interface TasksContext {
 export const Context = createContext<TasksContext>({} as TasksContext);
 
 export function TasksProvider({ children }: { children: ReactNode }) {
-  // const [tasks, setTasks] = useLocalStorage<Task[]>(
-  //   LOCAL_STORAGE_TASKS.KEY,
-  //   LOCAL_STORAGE_TASKS.DEFAULT
-  // );
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [areFinishedTasksHidden, setAreFinishedTasksHidden] =
+    useState<boolean>(false);
+  const [importanceFilter, setImportanceFilter] = useState<SortingValues>();
+  const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
 
   useEffect(() => {
     axios
@@ -54,24 +54,24 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         setTasks(tasks.data);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [tasks]);
 
-  const [areFinishedTasksHidden, setAreFinishedTasksHidden] =
-    useState<boolean>(false);
-  const [importanceFilter, setImportanceFilter] = useState<SortingValues>();
-  const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
-
-  // function addTask(task: Task) {
-  //   setTasks([task, ...tasks]);
-  // }
   function addTask(task: Task) {
-    console.log("before posting", task);
     axios
       .post("http://localhost:3001/", task)
       .then((res) => {
         const data = res.data;
-        console.log("Task added successfully", data);
         setTasks([...tasks, data]);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function deleteTask(DeleteTask: Task) {
+    console.log("DeleteTaskId", DeleteTask._id);
+    axios
+      .delete("http://localhost:3001/", { data: { id: DeleteTask._id } })
+      .then(() => {
+        console.log("Task deleted successfully");
       })
       .catch((error) => console.log(error));
   }
@@ -79,27 +79,27 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   function taskDone(taskDone: Task) {
     setTasks(
       tasks.map((task) =>
-        task.id === taskDone.id
+        task._id === taskDone._id
           ? { ...task, done: !task.done, star: false }
           : task
       )
     );
   }
 
-  function deleteTask(DeleteTask: Task) {
-    setTasks(tasks.filter((task) => task.id !== DeleteTask.id));
-  }
+  // function deleteTask(DeleteTask: Task) {
+  //   setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
+  // }
 
   function editTask(updatingTask: Task) {
     const updatedTasks = tasks.map((task) =>
-      task.id === updatingTask.id ? updatingTask : task
+      task._id === updatingTask._id ? updatingTask : task
     );
     setTasks(updatedTasks);
   }
 
-  function setTaskImportance(id: string, importance: Importance) {
+  function setTaskImportance(_id: string, importance: Importance) {
     const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, importance: importance } : task
+      task._id === _id ? { ...task, importance: importance } : task
     );
     setTasks(updatedTasks);
   }
@@ -111,7 +111,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   function arrangeStarForTask(taskStar: Task) {
     setTasks(
       tasks.map((task) =>
-        task.id === taskStar.id ? { ...task, star: !task.star } : task
+        task._id === taskStar._id ? { ...task, star: !task.star } : task
       )
     );
   }
