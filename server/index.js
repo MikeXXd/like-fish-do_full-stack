@@ -1,19 +1,22 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const dotenv = require("dotenv");
+const dbConnection = require("./src/db/db.js");
 const Tasks = require("./models/Tasks.js");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+dotenv.config();
 
-mongoose.connect("mongodb://127.0.0.1:27017/fishdo");
+const PORT = process.env.PORT
 
 app.get("/", (req, res) => {
   Tasks.find()
     .then((tasks) => res.json(tasks))
     .catch((err) => res.json(err));
 });
+
 
 app.post("/", (req, res) => {
   const taskData = req.body;
@@ -48,6 +51,8 @@ app.put("/", (req, res) => {
     .catch((err) => res.json(err));
 });
 
-app.listen(3001, () => {
-  console.log("Server has started!");
+app.listen(PORT, () => {
+  console.log(`Server has started at port: ${PORT}`);
 });
+
+dbConnection();
