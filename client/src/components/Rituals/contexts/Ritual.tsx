@@ -1,28 +1,28 @@
 import { ReactNode, createContext } from "react";
-import { useLocalStorage } from "../../../hooks/useLocalStorage";
-import { RITUAL_REMINDER } from "../constants";
 import { Importance } from "../../../constants";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { RITUAL_TIME_BASE } from "../constants";
 
 const LOCAL_STORAGE_RITUALS = {
   KEY: "rituales",
   DEFAULT: []
 };
 
-type RitualReminder = (typeof RITUAL_REMINDER)[number];
+export type RitualTimeBase = (typeof RITUAL_TIME_BASE)[number];
 
 export interface Ritual {
   id: string;
   title: string;
   description: string;
   importance: Importance;
-  reminder: RitualReminder;
+  timeBase: RitualTimeBase;
   frequency: number;
   timeStamp: Date;
   performed: Date[];
-  completed?: {
+  history?: {
     date: Date;
-    set: number;
-    done: number;
+    frequency: number;
+    performed: Date[];
   }[];
 }
 

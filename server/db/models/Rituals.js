@@ -7,8 +7,18 @@ const RitualSchema = new mongoose.Schema({
       type: String,
       enum: ["low", "medium", "high"],
     },
-    reminder: { type: String, enum: ["daily", "weekly", "monthly"] },
+    basis: { type: String, enum: ["daily", "weekly", "monthly"] },
     frequency: { type: Number },
+    createdAt: { type: Date, default: Date.now },
+    performed: { type: [Date], default: []},
+    history: {
+      type: {
+        date: { type: Date },
+        frequency: { type: Number },
+        performed: { type: [Date] },
+      },
+      default: undefined,
+    }
   });
 
 module.exports = mongoose.model("Rituals", RitualSchema);

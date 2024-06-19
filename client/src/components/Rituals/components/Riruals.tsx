@@ -26,7 +26,7 @@ export function Rituals() {
       title: data.title,
       description: data.description,
       importance: data.importance,
-      reminder: data.reminder,
+      timeBase: data.timeBase,
       frequency: data.frequency,
       timeStamp: new Date(),
       performed: []
@@ -76,7 +76,7 @@ export function Rituals() {
             {/* --Importance------------------------------------------ */}
             <Modal_Input_Importance />
 
-            {/* --reminder------------------------------------------  */}
+            {/* --basis------------------------------------------  */}
             <Modal_Input_Reminder errorMessages={errors.frequency?.message} />
 
             <ModalFooter

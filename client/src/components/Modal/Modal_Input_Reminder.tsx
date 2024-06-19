@@ -1,16 +1,17 @@
 import { useFormContext } from "react-hook-form";
-import { RITUAL_REMINDER } from "../Rituals/constants";
+import { RITUAL_TIME_BASE } from "../Rituals/constants";
+import { RitualTimeBase } from "../Rituals/contexts/Ritual";
 
-type RitualReminder = (typeof RITUAL_REMINDER)[number];
+
 
 interface Props {
   errorMessages: string | undefined;
-  defaultReminder?: RitualReminder;
+  defaultTimeBase?: RitualTimeBase;
   defaultFrequency?: number;
 }
 
 export default function Modal_Input_Reminder({
-  defaultReminder = RITUAL_REMINDER[0],
+  defaultTimeBase = RITUAL_TIME_BASE[0],
   defaultFrequency = 1,
   errorMessages
 }: Props) {
@@ -18,23 +19,23 @@ export default function Modal_Input_Reminder({
 
   return (
     <div className="flex flex-col">
-      <label htmlFor="reminder">Reminder</label>
+      <label htmlFor="timeBase">Time Base</label>
       <div
-        id="reminder"
+        id="timeBase"
         className="flex justify-between w-full grid-cols-4 gap-2 rounded-md bg-white p-2"
       >
-        {RITUAL_REMINDER.map((value) => (
+        {RITUAL_TIME_BASE.map((value) => (
           <div key={value}>
             <input
-              {...register("reminder")}
+              {...register("timeBase")}
               type="radio"
-              id={`reminder-${value}`}
+              id={`timeBase-${value}`}
               value={value}
               className="peer hidden"
-              defaultChecked={value === defaultReminder}
+              defaultChecked={value === defaultTimeBase}
             />
             <label
-              htmlFor={`reminder-${value}`}
+              htmlFor={`timeBase-${value}`}
               className="block cursor-pointer select-none rounded-md p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
             >
               {value}
