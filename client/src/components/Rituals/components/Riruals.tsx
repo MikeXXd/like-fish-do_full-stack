@@ -3,7 +3,6 @@ import { useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
-import Modal_Input_Reminder from "../../Modal/Modal_Input_Reminder";
 import { Modal_Input_Text } from "../../Modal/Modal_Input_Text";
 import ModalFooter from "../../Modal/ModalFooter";
 import TitlePlusBtn from "../../TitlePlusBtn";
@@ -11,6 +10,7 @@ import { RitualFormData, ritualSchema } from "../constants";
 import { Ritual } from "../contexts/Ritual";
 import useRituals from "../hooks/useRituals";
 import RitualsList from "./RitualsList";
+import Modal_Input_TimeBase from "../../Modal/Modal_Input_TimeBase";
 
 export function Rituals() {
   const { addRitual } = useRituals();
@@ -22,7 +22,7 @@ export function Rituals() {
 
   function onSubmit(data: FieldValues) {
     const newRitual: Ritual = {
-      id: crypto.randomUUID(),
+      _id: crypto.randomUUID(),
       title: data.title,
       description: data.description,
       importance: data.importance,
@@ -77,7 +77,7 @@ export function Rituals() {
             <Modal_Input_Importance />
 
             {/* --basis------------------------------------------  */}
-            <Modal_Input_Reminder errorMessages={errors.frequency?.message} />
+            <Modal_Input_TimeBase errorMessages={errors.frequency?.message} />
 
             <ModalFooter
               closeBtnName="Close"

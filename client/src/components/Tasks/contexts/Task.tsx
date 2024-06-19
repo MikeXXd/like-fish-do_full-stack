@@ -53,7 +53,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         setTasks(tasks.data);
       })
       .catch((error) => console.log(error));
-  }, [tasks]);
+  }, []);
 
   function addTask(task: Task) {
     axios

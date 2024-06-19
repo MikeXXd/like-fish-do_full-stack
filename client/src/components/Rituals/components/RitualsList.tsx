@@ -8,7 +8,7 @@ export default function RitualsList() {
   return (
     <ul className="flex flex-col gap-3 mt-8 sm:max-w-fit w-full ">
       {rituals.map((ritual) => (
-        <RitualsListItem key={ritual.id} ritual={ritual} />
+        <RitualsListItem key={ritual._id} ritual={ritual} />
       ))}
     </ul>
   );

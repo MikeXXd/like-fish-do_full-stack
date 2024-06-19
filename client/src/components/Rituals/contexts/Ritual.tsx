@@ -11,7 +11,7 @@ const LOCAL_STORAGE_RITUALS = {
 export type RitualTimeBase = (typeof RITUAL_TIME_BASE)[number];
 
 export interface Ritual {
-  id: string;
+  _id?: string;
   title: string;
   description: string;
   importance: Importance;
@@ -33,7 +33,7 @@ interface RitualContext {
   addPermormance: (ritual: Ritual) => void;
   // taskDone: (ritual: Ritual) => void;
   editRitual: (ritual: Ritual) => void;
-  // setTaskImportance: (id: string, importance: number) => void;
+  // setTaskImportance: (_id: string, importance: number) => void;
   // filterFinishedTasks: () => void;
   // areFinishedTasksHidden: boolean;
   // arrangeStarForTask: (ritual: Ritual) => void;
@@ -61,7 +61,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
 
   function addPermormance(performedRitual: Ritual) {
     const updatedTasks = rituals.map((ritual) =>
-      ritual.id === performedRitual.id
+      ritual._id === performedRitual._id
         ? { ...ritual, performed: [...ritual.performed, new Date()] }
         : ritual
     );
@@ -71,7 +71,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   // function taskDone(taskDone: Ritual) {
   //   setRituals(
   //     rituals.map((ritual) =>
-  //       ritual.id === taskDone.id
+  //       ritual._id === taskDone._id
   //         ? { ...ritual, done: !ritual.done, star: false }
   //         : ritual
   //     )
@@ -79,19 +79,19 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   // }
 
   function deleteRitual(DeleteTask: Ritual) {
-    setRituals(rituals.filter((ritual) => ritual.id !== DeleteTask.id));
+    setRituals(rituals.filter((ritual) => ritual._id !== DeleteTask._id));
   }
 
   function editRitual(editedRitual: Ritual) {
     const updatedTasks = rituals.map((ritual) =>
-      ritual.id === editedRitual.id ? editedRitual : ritual
+      ritual._id === editedRitual._id ? editedRitual : ritual
     );
     setRituals(updatedTasks);
   }
 
-  // function setTaskImportance(id: string, importance: number) {
+  // function setTaskImportance(_id: string, importance: number) {
   //   const updatedTasks = rituals.map((ritual) =>
-  //     ritual.id === id ? { ...ritual, importance: importance } : ritual
+  //     ritual._id === _id ? { ...ritual, importance: importance } : ritual
   //   );
   //   setRituals(updatedTasks);
   // }
@@ -103,7 +103,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   // function arrangeStarForTask(taskStar: Ritual) {
   //   setRituals(
   //     rituals.map((ritual) =>
-  //       ritual.id === taskStar.id ? { ...ritual, star: !ritual.star } : ritual
+  //       ritual._id === taskStar._id ? { ...ritual, star: !ritual.star } : ritual
   //     )
   //   );
   // }

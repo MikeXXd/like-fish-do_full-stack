@@ -14,7 +14,7 @@ import { cc } from "../../../util/cc";
 import ImportanceIconFish from "../../ImportanceIconFish";
 import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
-import Modal_Input_Reminder from "../../Modal/Modal_Input_Reminder";
+import Modal_Input_TimeBase from "../../Modal/Modal_Input_TimeBase";
 import { Modal_Input_Text } from "../../Modal/Modal_Input_Text";
 import ModalFooter from "../../Modal/ModalFooter";
 import { RitualFormData, ritualSchema } from "../constants";
@@ -42,11 +42,11 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
 
   function onSubmit(data: FieldValues) {
     const editedRitual: Ritual = {
-      id: ritual.id, // not changing
+      _id: ritual._id, // not changing
       title: data.title,
       description: data.description,
       importance: data.importance,
-      reminder: data.reminder,
+      timeBase: data.timeBase,
       frequency: data.frequency,
       timeStamp: ritual.timeStamp, // not changing
       performed: ritual.performed // not changing
@@ -158,7 +158,7 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
                   />
                 </button>
                 <span>{`${ritual.performed.length}/${ritual.frequency} `}</span>
-                <span className="text-sm">{ritual.reminder}</span>
+                <span className="text-sm">{ritual.timeBase}</span>
               </div>
             )}
           </div>
@@ -279,8 +279,8 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
               <Modal_Input_Importance defaultValue={ritual.importance} />
 
               {/* --Reminder------------------------------------------ */}
-              <Modal_Input_Reminder
-                defaultReminder={ritual.reminder}
+              <Modal_Input_TimeBase
+                defaultTimeBase={ritual.timeBase}
                 defaultFrequency={ritual.frequency}
                 errorMessages={errors.frequency?.message}
               />

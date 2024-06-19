@@ -10,7 +10,7 @@ interface Props {
   defaultFrequency?: number;
 }
 
-export default function Modal_Input_Reminder({
+export default function Modal_Input_TimeBase({
   defaultTimeBase = RITUAL_TIME_BASE[0],
   defaultFrequency = 1,
   errorMessages
