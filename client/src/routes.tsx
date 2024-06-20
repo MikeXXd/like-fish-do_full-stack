@@ -13,7 +13,8 @@ export const routes = createBrowserRouter([
       { errorElement: <div>404 Not Found</div> },
       {
         children: [
-          { index: true, element: <Tasks /> },
+          { index: true, element: <Tasks /> }, // TODO: this  is about to be changed for general homepage with most important information from all segments of the app
+          { path: "tasks", element: <Tasks /> }, //TODO: this will be main url for
           {
             path: "rituals",
             element: <Rituals />

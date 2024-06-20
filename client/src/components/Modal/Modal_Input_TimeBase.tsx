@@ -2,16 +2,16 @@ import { useFormContext } from "react-hook-form";
 import { RITUAL_TIME_BASE } from "../Rituals/constants";
 import { RitualTimeBase } from "../Rituals/contexts/Ritual";
 
-
-
 interface Props {
   errorMessages: string | undefined;
   defaultTimeBase?: RitualTimeBase;
+  keepSameTimeBase?: boolean; // if true, the user can't change the time base value, the timeBase should be chosen only once when Ritual is created
   defaultFrequency?: number;
 }
 
 export default function Modal_Input_TimeBase({
   defaultTimeBase = RITUAL_TIME_BASE[0],
+  keepSameTimeBase = false,
   defaultFrequency = 1,
   errorMessages
 }: Props) {
@@ -24,24 +24,44 @@ export default function Modal_Input_TimeBase({
         id="timeBase"
         className="flex justify-between w-full grid-cols-4 gap-2 rounded-md bg-white p-2"
       >
-        {RITUAL_TIME_BASE.map((value) => (
-          <div key={value}>
-            <input
-              {...register("timeBase")}
-              type="radio"
-              id={`timeBase-${value}`}
-              value={value}
-              className="peer hidden"
-              defaultChecked={value === defaultTimeBase}
-            />
-            <label
-              htmlFor={`timeBase-${value}`}
-              className="block cursor-pointer select-none rounded-md p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
-            >
-              {value}
-            </label>
-          </div>
-        ))}
+        {!keepSameTimeBase &&
+          RITUAL_TIME_BASE.map((value) => (
+            <div key={value}>
+              <input
+                {...register("timeBase")}
+                type="radio"
+                id={`timeBase-${value}`}
+                value={value}
+                className="peer hidden"
+                defaultChecked={value === defaultTimeBase}
+              />
+              <label
+                htmlFor={`timeBase-${value}`}
+                className="block cursor-pointer select-none rounded-md p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+              >
+                {value}
+              </label>
+            </div>
+          ))}
+        {keepSameTimeBase &&
+          RITUAL_TIME_BASE.map((value) => (
+            <div key={value}>
+              <input
+                {...register("timeBase")}
+                type="radio"
+                id={`timeBase-${value}`}
+                value={value}
+                className="peer hidden"
+                checked={value === defaultTimeBase}
+              />
+              <label
+                htmlFor={`timeBase-${value}`}
+                className="block select-none rounded-md p-2 text-slate-300 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+              >
+                {value}
+              </label>
+            </div>
+          ))}
       </div>
       {/* /*--frequency------------------------------------------ */}
       <div className="flex flex-col ">

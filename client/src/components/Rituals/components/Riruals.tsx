@@ -22,13 +22,12 @@ export function Rituals() {
 
   function onSubmit(data: FieldValues) {
     const newRitual: Ritual = {
-      _id: crypto.randomUUID(),
       title: data.title,
       description: data.description,
       importance: data.importance,
-      timeBase: data.timeBase,
+      _timeBase: data.timeBase,
       frequency: data.frequency,
-      timeStamp: new Date(),
+      _createdAt: new Date(),
       performed: []
     };
     addRitual(newRitual);

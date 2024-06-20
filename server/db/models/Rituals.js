@@ -7,9 +7,9 @@ const RitualSchema = new mongoose.Schema({
       type: String,
       enum: ["low", "medium", "high"],
     },
-    basis: { type: String, enum: ["daily", "weekly", "monthly"] },
+    _timeBase: { type: String, enum: ["daily", "weekly", "monthly"] },
     frequency: { type: Number },
-    createdAt: { type: Date, default: Date.now },
+    _createdAt: { type: Date, default: Date.now },
     performed: { type: [Date], default: []},
     history: {
       type: {

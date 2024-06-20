@@ -42,14 +42,11 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
 
   function onSubmit(data: FieldValues) {
     const editedRitual: Ritual = {
-      _id: ritual._id, // not changing
+      ...ritual,
       title: data.title,
       description: data.description,
       importance: data.importance,
-      timeBase: data.timeBase,
-      frequency: data.frequency,
-      timeStamp: ritual.timeStamp, // not changing
-      performed: ritual.performed // not changing
+      frequency: data.frequency
     };
     editRitual(editedRitual);
     methodes.reset();
@@ -158,7 +155,7 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
                   />
                 </button>
                 <span>{`${ritual.performed.length}/${ritual.frequency} `}</span>
-                <span className="text-sm">{ritual.timeBase}</span>
+                <span className="text-sm">{ritual._timeBase}</span>
               </div>
             )}
           </div>
@@ -280,7 +277,8 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
 
               {/* --Reminder------------------------------------------ */}
               <Modal_Input_TimeBase
-                defaultTimeBase={ritual.timeBase}
+                defaultTimeBase={ritual._timeBase}
+                keepSameTimeBase
                 defaultFrequency={ritual.frequency}
                 errorMessages={errors.frequency?.message}
               />

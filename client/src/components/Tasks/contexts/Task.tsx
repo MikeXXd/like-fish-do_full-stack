@@ -1,7 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 // import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { Importance } from "../../../constants";
-import axios from "axios";
+import apiClient from "../../../services/api-client";
+import { CanceledError } from "axios";
 
 // const LOCAL_STORAGE_TASKS = {
 //   KEY: "taskies",
@@ -47,17 +48,23 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/")
+    const controller = new AbortController();
+    apiClient
+      .get("/", { signal: controller.signal })
       .then((tasks) => {
         setTasks(tasks.data);
       })
-      .catch((error) => console.log(error));
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        console.log(err.message);
+      });
+
+    return () => controller.abort();
   }, []);
 
   function addTask(task: Task) {
-    axios
-      .post("http://localhost:3001/", task)
+    apiClient
+      .post("/", task)
       .then((res) => {
         // Optimistic update
         const data = res.data;
@@ -67,8 +74,8 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }
 
   function deleteTask(DeleteTask: Task) {
-    axios
-      .delete("http://localhost:3001/", { data: { id: DeleteTask._id } })
+    apiClient
+      .delete("/", { data: { id: DeleteTask._id } })
       .then(() => {
         // Optimistic update
         setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
@@ -77,8 +84,8 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }
 
   function editTask(task: Task) {
-    axios
-      .put("http://localhost:3001/", { id: task._id, ...task })
+    apiClient
+      .put("/", { id: task._id, ...task })
       .then(() => {
         // Optimistic update
         const updatedTasks = tasks.map((t) => (t._id === task._id ? task : t));

@@ -1,12 +1,14 @@
-import { ReactNode, createContext } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { Importance } from "../../../constants";
-import { useLocalStorage } from "../../../hooks/useLocalStorage";
+// import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { RITUAL_TIME_BASE } from "../constants";
+import apiClient from "../../../services/api-client";
+import { CanceledError } from "axios";
 
-const LOCAL_STORAGE_RITUALS = {
-  KEY: "rituales",
-  DEFAULT: []
-};
+// const LOCAL_STORAGE_RITUALS = {
+//   KEY: "rituales",
+//   DEFAULT: []
+// };
 
 export type RitualTimeBase = (typeof RITUAL_TIME_BASE)[number];
 
@@ -15,9 +17,9 @@ export interface Ritual {
   title: string;
   description: string;
   importance: Importance;
-  timeBase: RitualTimeBase;
+  _timeBase: RitualTimeBase;
   frequency: number;
-  timeStamp: Date;
+  _createdAt: Date;
   performed: Date[];
   history?: {
     date: Date;
@@ -31,89 +33,81 @@ interface RitualContext {
   addRitual: (ritual: Ritual) => void;
   deleteRitual: (ritual: Ritual) => void;
   addPermormance: (ritual: Ritual) => void;
-  // taskDone: (ritual: Ritual) => void;
   editRitual: (ritual: Ritual) => void;
-  // setTaskImportance: (_id: string, importance: number) => void;
-  // filterFinishedTasks: () => void;
-  // areFinishedTasksHidden: boolean;
-  // arrangeStarForTask: (ritual: Ritual) => void;
-  // filterByImportance: (importance: SortingValues) => void;
-  // importanceFilter: SortingValues;
-  // filterByTime: (importance: SortingValues) => void;
-  // timeFilterState: SortingValues;
 }
 
 export const Context = createContext<RitualContext>({} as RitualContext);
 
 export function RitualsProvider({ children }: { children: ReactNode }) {
-  const [rituals, setRituals] = useLocalStorage<Ritual[]>(
-    LOCAL_STORAGE_RITUALS.KEY,
-    LOCAL_STORAGE_RITUALS.DEFAULT
-  );
-  // const [areFinishedTasksHidden, setAreFinishedTasksHidden] =
-  //   useState<boolean>(false);
-  // const [importanceFilter, setImportanceFilter] = useState<SortingValues>();
-  // const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
+  const [rituals, setRituals] = useState<Ritual[]>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    apiClient
+      .get("/rituals", { signal: controller.signal })
+      .then((rituals) => {
+        setRituals(rituals.data);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        console.log(err.message);
+      });
+
+    return () => controller.abort();
+  }, []);
 
   function addRitual(ritual: Ritual) {
-    setRituals([ritual, ...rituals]);
+    apiClient
+      .post("/rituals", ritual)
+      .then((res) => {
+        // Optimistic update
+        const data = res.data;
+        console.log(data);
+        setRituals([...rituals, data]);
+      })
+      .catch((error) => console.log(error));
   }
 
-  function addPermormance(performedRitual: Ritual) {
-    const updatedTasks = rituals.map((ritual) =>
-      ritual._id === performedRitual._id
-        ? { ...ritual, performed: [...ritual.performed, new Date()] }
-        : ritual
-    );
-    setRituals(updatedTasks);
-  }
-
-  // function taskDone(taskDone: Ritual) {
-  //   setRituals(
-  //     rituals.map((ritual) =>
-  //       ritual._id === taskDone._id
-  //         ? { ...ritual, done: !ritual.done, star: false }
-  //         : ritual
-  //     )
-  //   );
+  // function deleteRitual(DeleteRitual: Ritual) {
+  //   setRituals(rituals.filter((ritual) => ritual._id !== DeleteRitual._id));
   // }
 
-  function deleteRitual(DeleteTask: Ritual) {
-    setRituals(rituals.filter((ritual) => ritual._id !== DeleteTask._id));
+  function deleteRitual(DeleteRitual: Ritual) {
+    apiClient
+      .delete("/rituals", { data: { id: DeleteRitual._id } })
+      .then(() => {
+        // Optimistic update
+        setRituals(rituals.filter((ritual) => ritual._id !== DeleteRitual._id));
+      })
+      .catch((error) => console.log(error));
   }
 
   function editRitual(editedRitual: Ritual) {
-    const updatedTasks = rituals.map((ritual) =>
-      ritual._id === editedRitual._id ? editedRitual : ritual
-    );
-    setRituals(updatedTasks);
+    apiClient
+      .put("/rituals", { id: editedRitual._id, ...editedRitual })
+      .then(() => {
+        // Optimistic update
+        const updatedRituals = rituals.map((ritual) =>
+          ritual._id === editedRitual._id ? editedRitual : ritual
+        );
+        setRituals(updatedRituals);
+      })
+      .catch((error) => console.log(error));
   }
 
-  // function setTaskImportance(_id: string, importance: number) {
-  //   const updatedTasks = rituals.map((ritual) =>
-  //     ritual._id === _id ? { ...ritual, importance: importance } : ritual
-  //   );
-  //   setRituals(updatedTasks);
-  // }
+  function addPermormance(performedRitual: Ritual) {
+    const ritualWithNewPerformance = {
+      ...performedRitual,
+      performed: [...performedRitual.performed, new Date()]
+    };
+    // Optimistic update
+    const updatedRituals = rituals.map((ritual) =>
+      ritual._id === performedRitual._id ? ritualWithNewPerformance : ritual
+    );
+    setRituals(updatedRituals);
 
-  // function filterFinishedTasks() {
-  //   setAreFinishedTasksHidden((value) => !value);
-  // }
-
-  // function arrangeStarForTask(taskStar: Ritual) {
-  //   setRituals(
-  //     rituals.map((ritual) =>
-  //       ritual._id === taskStar._id ? { ...ritual, star: !ritual.star } : ritual
-  //     )
-  //   );
-  // }
-
-  // function filterByImportance(importance: SortingValues = undefined) {
-  //   setImportanceFilter(importance);
-  // }
-  // function filterByTime(timeState: SortingValues = undefined) {
-  //   setTimeFilterState(timeState);
-  // }
+    editRitual(ritualWithNewPerformance);
+  }
 
   return (
     <Context.Provider
@@ -123,14 +117,6 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
         deleteRitual,
         editRitual,
         addPermormance
-        // setTaskImportance,
-        // filterFinishedTasks,
-        // areFinishedTasksHidden,
-        // arrangeStarForTask,
-        // importanceFilter,
-        // filterByImportance,
-        // filterByTime,
-        // timeFilterState
       }}
     >
       {children}
