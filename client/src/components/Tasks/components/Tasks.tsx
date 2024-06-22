@@ -28,7 +28,7 @@ export default function Tasks() {
       importance: data.importance,
       star: false,
       done: false,
-      timeStamp: new Date()
+      _createdAt: new Date()
     };
     addTask(newTask);
     filterByImportance(undefined);

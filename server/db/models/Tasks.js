@@ -8,7 +8,7 @@ const TaskSchema = new mongoose.Schema({
   },
   done: { type: Boolean, default: false },
   star: { type: Boolean, default: false },
-  timeStamp: Date,
+  _createdAt: Date,
   finishedAt: {
     type: Date,
     default: undefined,

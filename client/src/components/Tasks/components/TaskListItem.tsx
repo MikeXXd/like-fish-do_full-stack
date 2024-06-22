@@ -37,7 +37,7 @@ export function TaskListItem({ task }: Props) {
   const [isTaskChanging, setIsTaskChanging] = useState<boolean>(false);
   const [lastStateOfStar, setLastStateOfStar] = useState<boolean>(task.star); // needed for comparison if start state change to trigger useEffect
   const [isNewTask, setIsNewTask] = useState<boolean>(() => {
-    if (differenceInSeconds(new Date(), task.timeStamp) < 5) {
+    if (differenceInSeconds(new Date(), task._createdAt) < 5) {
       return true;
     }
     return false;
@@ -48,7 +48,7 @@ export function TaskListItem({ task }: Props) {
   const methodes = useForm<TaskFormData>({ resolver: zodResolver(taskSchema) });
   const errors = methodes.formState.errors;
 
-  const timeLasting = formatDistance(task.timeStamp, new Date(), {
+  const timeLasting = formatDistance(task._createdAt, new Date(), {
     addSuffix: true
   });
 

@@ -19,7 +19,7 @@ export interface Task {
   importance: Importance;
   done: boolean;
   star: boolean;
-  timeStamp: Date;
+  _createdAt: Date;
   finishedAt?: Date;
 }
 

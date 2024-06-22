@@ -4,11 +4,11 @@ const dotenv = require("dotenv");
 const dbConnection = require("./db/db.js");
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors()); // middleware to allow cross-origin requests
+app.use(express.json());  // middleware to parse json data
 
 dotenv.config();
-const PORT = process.env.PORT
+const port = process.env.PORT || 3001;
 
 
 const tasksRouter = require("./routes/tasks.js");
@@ -18,8 +18,8 @@ app.use("/", tasksRouter);
 app.use("/tasks", tasksRouter);
 app.use("/rituals", ritualRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server has started at port: ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server has started at port: ${port}`);
 });
 
 dbConnection();
