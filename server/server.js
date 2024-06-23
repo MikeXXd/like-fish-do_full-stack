@@ -11,11 +11,11 @@ dotenv.config();
 const port = process.env.PORT || 3001;
 
 
-const tasksRouter = require("./routes/tasks.js");
+const taskRouter = require("./routes/tasks.js");
 const ritualRouter = require("./routes/rituals.js");
 
-app.use("/", tasksRouter);
-app.use("/tasks", tasksRouter);
+app.use("/", taskRouter);
+app.use("/tasks", taskRouter);
 app.use("/rituals", ritualRouter);
 
 app.listen(port, () => {

@@ -1,60 +1,63 @@
 const express = require("express");
-const router = express.Router();
 const Tasks = require("../db/models/Tasks");
+const { isValidObjectId } = require("mongoose");
+
+const router = express.Router();
+
+const getTasks = async (res) => {
+  try {
+    const tasks = await Tasks.find();
+    res.status(200).json(tasks);
+  } catch (err) {
+    console.error("Error retrieving tasks:", err);
+    res.status(500).json({ error: "Failed to retrieve tasks" });
+  }
+};
 
 router
   .route("/")
-  .get((_, res) => {
-      Tasks.find()
-        .then((tasks) => res.json(tasks))
-        .catch((err) => {
-          console.error("Error retrieving tasks:", err);
-          res.status(500).json({ error: "Failed to retrieve tasks" });
-        });
-    })
-  .post((req, res) => {
-    const taskData = req.body;
-    const newTask = new Tasks(taskData);
-    newTask
-      .save()
-      .then((task) => res.json(task))
-      .catch((err) => {
-        console.error("Error creating task:", err);
-        res.status(500).json({ error: "Failed to create task" });
-      });
+  .get(async (_, res) => {
+    await getTasks(res);
   })
-  .delete((req, res) => {
-    const taskId = req.body.id;
-    Tasks.findByIdAndDelete(taskId)
-      .then(() => {
-        Tasks.find()
-          .then((tasks) => res.json(tasks))
-          .catch((err) => {
-            console.error("Error retrieving tasks:", err);
-            res.status(500).json({ error: "Failed to retrieve tasks" });
-          });
-      })
-      .catch((err) => {
-        console.error("Error deleting task:", err);
-        res.status(500).json({ error: "Failed to delete task" });
-      });
+  .post(async (req, res) => {
+    try {
+      const taskData = req.body;
+      const newTask = new Tasks(taskData);
+      const savedTask = await newTask.save();
+      res.status(201).json(savedTask);
+    } catch (err) {
+      console.error("Error creating task:", err);
+      res.status(500).json({ error: "Failed to create task" });
+    }
   })
-  .put((req, res) => {
-    const taskId = req.body.id;
-    const taskData = req.body;
-    Tasks.findByIdAndUpdate(taskId, taskData)
-      .then(() => {
-        Tasks.find()
-          .then((tasks) => res.json(tasks))
-          .catch((err) => {
-            console.error("Error retrieving tasks:", err);
-            res.status(500).json({ error: "Failed to retrieve tasks" });
-          });
-      })
-      .catch((err) => {
-        console.error("Error updating task:", err);
-        res.status(500).json({ error: "Failed to update task" });
-      });
+  .delete(async (req, res) => {
+    try {
+      if (isValidObjectId(req.body.id)) {
+        const taskId = req.body.id;
+        await Tasks.findByIdAndDelete(taskId);
+        await getTasks(res);
+      } else {
+        res.status(400).json({ error: "Invalid id" });
+      }
+    } catch (err) {
+      console.error("Error deleting task:", err);
+      res.status(500).json({ error: "Failed to delete task" });
+    }
+  })
+  .put(async (req, res) => {
+    try {
+      if (isValidObjectId(req.body.id)) {
+        const taskId = req.body.id;
+        const taskData = req.body;
+        await Tasks.findByIdAndUpdate(taskId, taskData);
+        res.status(202).json({ message: "Task updated successfully" });
+      } else {
+        res.status(400).json({ error: "Invalid id" });
+      }
+    } catch (err) {
+      console.error("Error updating task:", err);
+      res.status(500).json({ error: "Failed to update task" });
+    }
   });
 
 module.exports = router;
