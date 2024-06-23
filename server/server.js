@@ -1,3 +1,4 @@
+const morgan = require("morgan");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -5,11 +6,15 @@ const dbConnection = require("./db/db.js");
 
 const app = express();
 app.use(cors()); // middleware to allow cross-origin requests
-app.use(express.json());  // middleware to parse json data
+app.use(express.json()); // middleware to parse json data
+
+if (app.get("env") === "development") {
+  app.use(morgan("dev")); // middleware to log requests
+  console.log("Morgan enabled...");
+}
 
 dotenv.config();
 const port = process.env.PORT || 3001;
-
 
 const taskRouter = require("./routes/tasks.js");
 const ritualRouter = require("./routes/rituals.js");
