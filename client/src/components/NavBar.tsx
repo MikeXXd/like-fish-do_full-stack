@@ -1,11 +1,11 @@
 import { FishSymbol, Menu, X } from "lucide-react";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { cc } from "../util/cc";
 import { useActionOnOutsideClick } from "../hooks/useActionOnOutsideClick";
 
 const LINKS = [
-  { name: "Tasks", path: "/" },
+  { name: "Tasks", path: "/tasks" },
   { name: "Rituals", path: "/rituals" },
   { name: "Statistics", path: "/statistics" },
   { name: "About", path: "/about" }
@@ -20,20 +20,33 @@ function NavBar() {
     <div className="sticky top-0 z-10 flex border-gray-500 bg-gray-500 text-slate-200">
       <nav className=" container bg-gray-500 p-4 flex justify-between items-center min-w-[300px] w-full  max-w-[850px]">
         {/*----Title------------------------- */}
-        <div className="flex gap-2 items-center">
-          <FishSymbol size={29} color="red" />
-          <div className="text-slate-200 text-2xl font-bold">Like-Fish-DO</div>
+        <div className="flex gap-2 items-center hover:text-white text-slate-200 transition-transform">
+          <NavLink
+            to={"/"}
+            className={({ isActive }) =>
+              isActive
+                ? "border-b-white border-b-2 flex gap-2 items-center"
+                : " border-b-transparent border-b-2 flex gap-2 items-center"
+            }
+          >
+            <FishSymbol size={29} color="red" />
+            <div className=" text-2xl font-bold">Like-Fish-DO</div>
+          </NavLink>
         </div>
         {/* ----navigation--------------------------- */}
-        <div className="hidden sm:flex space-x-4 text-xl">
+        <div className="hidden sm:flex space-x-4 text-xl text-gray font-semibold transition-transform">
           {LINKS.map((link) => (
-            <Link
+            <NavLink
               key={link.name}
               to={link.path}
-              className=" text-gray-200 hover:text-white"
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b-white border-b-2 text-white "
+                  : " border-b-transparent border-b-2 hover:text-white"
+              }
             >
               {link.name}
-            </Link>
+            </NavLink>
           ))}
         </div>
 

@@ -81,12 +81,12 @@ function sortTasksByTime({ tasks, value }: SortByTimeProps): Task[] {
   if (value === "ascend") {
     return tasks.sort(
       (a, b) =>
-        new Date(a.timeStamp).getTime() - new Date(b.timeStamp).getTime()
+        new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
     );
   } else if (value === "descend") {
     return tasks.sort(
       (a, b) =>
-        new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime()
+        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
     );
   } else return tasks;
 }
