@@ -12,12 +12,11 @@ const RitualSchema = new mongoose.Schema({
     _createdAt: { type: Date, default: Date.now },
     performed: { type: [Date], default: []},
     history: {
-      type: {
+      type: [{
         date: { type: Date },
         frequency: { type: Number },
-        performed: { type: [Date] },
-      },
-      default: undefined,
+        performed: { type: [Date] }
+      }], default: []
     }
   });
 

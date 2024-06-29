@@ -1,7 +1,7 @@
 const morgan = require("morgan");
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
+require("dotenv").config();
 const dbConnection = require("./db/db.js");
 
 const app = express();
@@ -10,10 +10,11 @@ app.use(express.json()); // middleware to parse json data
 
 if (app.get("env") === "development") {
   app.use(morgan("dev")); // middleware to log requests
-  console.log("Morgan enabled...");
+  console.log(`Morgan enabled...${app.get("env")}`);
 }
 
-dotenv.config();
+
+console.log(`Current NODE_ENV: ${process.env.NODE_ENV}`);
 const port = process.env.PORT || 3001;
 
 const taskRouter = require("./routes/tasks.js");
@@ -28,3 +29,4 @@ app.listen(port, () => {
 });
 
 dbConnection();
+
