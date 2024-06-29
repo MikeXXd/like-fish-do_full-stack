@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
@@ -22,7 +22,11 @@ export default function Tasks() {
   const methods = useForm<TaskFormData>({ resolver: zodResolver(taskSchema) });
   const errors = methods.formState.errors;
 
-  function onSubmit(data: FieldValues) {
+ useEffect(() => { // render the page at the top of the page when the page is loaded
+  window.scrollTo(0, 0)
+  }, [])
+
+  function onSubmit(data: FieldValues) { // add new task
     const newTask: NewTask = {
       title: data.title,
       importance: data.importance,
@@ -36,7 +40,7 @@ export default function Tasks() {
     setIsModalOpen(false);
   }
 
-  function onClose() {
+  function onClose() { // close the modal
     methods.reset();
     setIsModalOpen(false);
   }
