@@ -20,6 +20,7 @@ import ModalFooter from "../../Modal/ModalFooter";
 import { RitualFormData, ritualSchema } from "../constants";
 import { Ritual } from "../contexts/Ritual";
 import useRituals from "../hooks/useRituals";
+import { Modal_Input_TextArea } from "../../Modal/Modal_Input_TextArea";
 
 const ICON_SIZE = 27;
 
@@ -266,8 +267,9 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
               />
 
               {/* --Description------------------------------------------ */}
-              <Modal_Input_Text
-                name="description"
+              <Modal_Input_TextArea
+                labelName="description"
+                registerName="description"
                 errorMessages={errors.description?.message}
                 defaultValue={ritual.description}
               />

@@ -50,7 +50,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const controller = new AbortController();
     apiClient
-      .get("/", { signal: controller.signal })
+      .get("/tasks", { signal: controller.signal })
       .then((tasks) => {
         setTasks(tasks.data);
       })
@@ -64,7 +64,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   function addTask(task: Task) {
     apiClient
-      .post("/", task)
+      .post("/tasks", task)
       .then((res) => {
         // Optimistic update
         const data = res.data;
@@ -75,7 +75,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   function deleteTask(DeleteTask: Task) {
     apiClient
-      .delete("/", { data: { id: DeleteTask._id } })
+      .delete("/tasks", { data: { id: DeleteTask._id } })
       .then(() => {
         // Optimistic update
         setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
@@ -85,7 +85,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   function editTask(task: Task) {
     apiClient
-      .put("/", { id: task._id, ...task })
+      .put("/tasks", { id: task._id, ...task })
       .then(() => {
         // Optimistic update
         const updatedTasks = tasks.map((t) => (t._id === task._id ? task : t));

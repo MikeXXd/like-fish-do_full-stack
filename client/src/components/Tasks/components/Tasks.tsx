@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
-import { Modal_Input_Text } from "../../Modal/Modal_Input_Text";
+import { Modal_Input_TextArea } from "../../Modal/Modal_Input_TextArea";
 import ModalFooter from "../../Modal/ModalFooter";
 import TitlePlusBtn from "../../TitlePlusBtn";
 import { TaskFormData, taskSchema } from "../constants";
@@ -67,8 +67,9 @@ export default function Tasks() {
             className="flex flex-col gap-3"
           >
             {/* --Title------------------------------------------ */}
-            <Modal_Input_Text
-              name="title"
+            <Modal_Input_TextArea
+              labelName="text"
+              registerName="title"
               errorMessages={errors.title?.message}
               autoFocus
             />

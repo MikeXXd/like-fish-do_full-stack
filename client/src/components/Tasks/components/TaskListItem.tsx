@@ -16,7 +16,7 @@ import { cc } from "../../../util/cc";
 import ImportanceIconFish from "../../ImportanceIconFish";
 import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
-import { Modal_Input_Text } from "../../Modal/Modal_Input_Text";
+import { Modal_Input_TextArea } from "../../Modal/Modal_Input_TextArea";
 import ModalFooter from "../../Modal/ModalFooter";
 import { TaskFormData, taskSchema } from "../constants";
 import { Task } from "../contexts/Task";
@@ -296,8 +296,9 @@ export function TaskListItem({ task }: Props) {
             onSubmit={methodes.handleSubmit(onSubmit)}
             className="flex flex-col gap-3"
           >
-            <Modal_Input_Text
-              name="title"
+            <Modal_Input_TextArea
+              labelName="text"
+              registerName="title"
               defaultValue={task.title}
               errorMessages={errors.title?.message}
             />

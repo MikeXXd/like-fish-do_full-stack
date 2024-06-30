@@ -11,6 +11,7 @@ import { Ritual } from "../contexts/Ritual";
 import useRituals from "../hooks/useRituals";
 import RitualsList from "./RitualsList";
 import Modal_Input_TimeBase from "../../Modal/Modal_Input_TimeBase";
+import { Modal_Input_TextArea } from "../../Modal/Modal_Input_TextArea";
 
 export function Rituals() {
   const { addRitual } = useRituals();
@@ -72,8 +73,9 @@ export function Rituals() {
             />
 
             {/* --Description------------------------------------------ */}
-            <Modal_Input_Text
-              name="description"
+            <Modal_Input_TextArea
+              labelName="description"
+              registerName="description"
               errorMessages={errors.description?.message}
             />
             {/* --Importance------------------------------------------ */}
