@@ -30,7 +30,7 @@ interface Props {
 }
 
 export function TaskListItem({ task }: Props) {
-  const { deleteTask, taskDone, editTask, filterByImportance } = useTasks();
+  const { deleteTask, taskDone, editTask } = useTasks();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTaskDeleting, setIsTaskDeleteing] = useState<boolean>(false);
@@ -59,7 +59,6 @@ export function TaskListItem({ task }: Props) {
       importance: data.importance
     };
     editTask(editedTask);
-    filterByImportance(undefined);
     methodes.reset();
     setIsModalOpen(false);
   }

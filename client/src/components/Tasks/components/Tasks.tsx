@@ -15,7 +15,7 @@ import TaskList from "./TaskList";
 type NewTask = Omit<Task, "id">;
 
 export default function Tasks() {
-  const { addTask, filterByImportance } = useTasks();
+  const { addTask } = useTasks();
   const [search, setSearch] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,7 +35,6 @@ export default function Tasks() {
       _createdAt: new Date()
     };
     addTask(newTask);
-    filterByImportance(undefined);
     methods.reset();
     setIsModalOpen(false);
   }

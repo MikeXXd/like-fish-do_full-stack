@@ -3,6 +3,7 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { Importance } from "../../../constants";
 import apiClient from "../../../services/api-client";
 import { CanceledError } from "axios";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
 
 // const LOCAL_STORAGE_TASKS = {
 //   KEY: "taskies",
@@ -43,7 +44,7 @@ export const Context = createContext<TasksContext>({} as TasksContext);
 export function TasksProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [areFinishedTasksHidden, setAreFinishedTasksHidden] =
-    useState<boolean>(false);
+    useLocalStorage<boolean>("LikeFishDo_FinishedTasks", false);
   const [importanceFilter, setImportanceFilter] = useState<SortingValues>();
   const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
 
