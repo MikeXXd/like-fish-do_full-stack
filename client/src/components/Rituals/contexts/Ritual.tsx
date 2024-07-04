@@ -4,6 +4,7 @@ import { Importance } from "../../../constants";
 import { RITUAL_TIME_BASE } from "../constants";
 import apiClient from "../../../services/api-client";
 import { CanceledError } from "axios";
+import ritualTimeSortingValue from "../util/ritualTimeSortingValue";
 
 // const LOCAL_STORAGE_RITUALS = {
 //   KEY: "rituales",
@@ -40,6 +41,7 @@ export const Context = createContext<RitualContext>({} as RitualContext);
 
 export function RitualsProvider({ children }: { children: ReactNode }) {
   const [rituals, setRituals] = useState<Ritual[]>([]);
+  const [sortedRituals, setSortedRituals] = useState<Ritual[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -56,6 +58,15 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
     return () => controller.abort();
   }, []);
 
+  // sorting rituals based on the remaining time within it's timeBase and frequency
+  useEffect(() => {
+    rituals.map((r) => console.log(r.title, ritualTimeSortingValue(r)));
+    const sortedRituals = rituals.sort(
+      (a, b) => ritualTimeSortingValue(a) - ritualTimeSortingValue(b)
+    );
+    setSortedRituals(sortedRituals);
+  }, [rituals]);
+
   function addRitual(ritual: Ritual) {
     apiClient
       .post("/rituals", ritual)
@@ -67,10 +78,6 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
       })
       .catch((error) => console.log(error));
   }
-
-  // function deleteRitual(DeleteRitual: Ritual) {
-  //   setRituals(rituals.filter((ritual) => ritual._id !== DeleteRitual._id));
-  // }
 
   function deleteRitual(DeleteRitual: Ritual) {
     apiClient
@@ -112,7 +119,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   return (
     <Context.Provider
       value={{
-        rituals,
+        rituals: sortedRituals,
         addRitual,
         deleteRitual,
         editRitual,
