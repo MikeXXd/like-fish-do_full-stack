@@ -21,6 +21,7 @@ import { RitualFormData, ritualSchema } from "../constants";
 import { Ritual } from "../contexts/Ritual";
 import useRituals from "../hooks/useRituals";
 import { Modal_Input_TextArea } from "../../Modal/Modal_Input_TextArea";
+import getRitualAchievementInPercentage from "../util/ritualAchievementInPercentage";
 
 const ICON_SIZE = 27;
 
@@ -74,9 +75,9 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
 
   useEffect(() => {
     setAchievementProgress(
-      Math.round((ritual.performed.length / ritual.frequency) * 100)
+      getRitualAchievementInPercentage(ritual)
     );
-  }, [ritual.performed.length, ritual.frequency]);
+  }, [ritual]);
 
   // --JSX--deleting-state---------------------------------------------------------
   if (isRitualDeleting) {

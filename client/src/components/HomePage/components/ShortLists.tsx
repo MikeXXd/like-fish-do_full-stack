@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import useTasks from "../../Tasks/hooks/useTasks";
 import { ReactNode } from "react";
 import useRituals from "../../Rituals/hooks/useRituals";
+import getRitualAchievementInPercentage from "../../Rituals/util/ritualAchievementInPercentage";
 
-export default function TasksShortList() {
+export default function ShortLists() {
   const { tasks } = useTasks();
   const { rituals } = useRituals();
 
@@ -25,10 +26,11 @@ export default function TasksShortList() {
       </Section>
       <Section title="Rituals" link="/rituals">
         <ol className="list-inside list-disc font-bold ">
-          {rituals.map((t, i) =>
+          {rituals.map((r, i) =>
             i < 3 ? (
-              <li className="" key={t._id}>
-                {t.title}
+              <li className="" key={r._id}>
+                {r.title}{" "}
+                <span className="ps-4 text-slate-500">{`${r._timeBase} - ${getRitualAchievementInPercentage(r)} %`}</span>
               </li>
             ) : null
           )}
@@ -47,6 +49,7 @@ interface SectionProps {
   link: string;
 }
 
+//-------Section component-----------------------
 function Section({ title, children, link }: SectionProps) {
   return (
     <div className="text-slate-900 w-full">
