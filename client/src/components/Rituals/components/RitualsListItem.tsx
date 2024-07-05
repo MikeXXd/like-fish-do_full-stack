@@ -136,7 +136,7 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
           {/* --left-side---title-------------------------------- */}
           <div className="flex flex-col p-2 col-span-8 sm:col-span-4 md:col-span-3  font-semibold text-2xl sm:text-lg transition-all">
             <button
-              // className=" p-2 col-span-8 sm:col-span-4 md:col-span-3 mx-auto font-semibold text-2xl sm:text-lg"
+              className="ps-4 truncate"
               type="button"
               onClick={() =>
                 !isRitualMenuOpen && setIsDescriptionFull(!isDescriptionFull)
