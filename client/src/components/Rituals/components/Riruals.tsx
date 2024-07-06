@@ -21,11 +21,13 @@ export function Rituals() {
   });
   const errors = methodes.formState.errors;
 
-  useEffect(() => { // render the page at the top of the page when the page is loaded
-    window.scrollTo(0, 0)
-    }, [])
+  useEffect(() => {
+    // render the page at the top of the page when the page is loaded
+    window.scrollTo(0, 0);
+  }, []);
 
-  function onSubmit(data: FieldValues) {// add new ritual
+  function onSubmit(data: FieldValues) {
+    // add new ritual
     const newRitual: Ritual = {
       title: data.title,
       description: data.description,
@@ -40,7 +42,8 @@ export function Rituals() {
     setIsModalOpen(false);
   }
 
-  function onClose() {// close the modal
+  function onClose() {
+    // close the modal
     methodes.reset();
     setIsModalOpen(false);
   }

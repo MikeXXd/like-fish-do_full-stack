@@ -14,7 +14,6 @@ export function FilterDescAscIcon({
   onClick,
   currentValue
 }: FilterProps) {
-  
   return (
     <div className="hover:scale-125 transition-transform">
       {!currentValue && (

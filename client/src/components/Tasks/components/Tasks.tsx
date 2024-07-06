@@ -22,11 +22,13 @@ export default function Tasks() {
   const methods = useForm<TaskFormData>({ resolver: zodResolver(taskSchema) });
   const errors = methods.formState.errors;
 
- useEffect(() => { // render the page at the top of the page when the page is loaded
-  window.scrollTo(0, 0)
-  }, [])
+  useEffect(() => {
+    // render the page at the top of the page when the page is loaded
+    window.scrollTo(0, 0);
+  }, []);
 
-  function onSubmit(data: FieldValues) { // add new task
+  function onSubmit(data: FieldValues) {
+    // add new task
     const newTask: NewTask = {
       title: data.title,
       importance: data.importance,
@@ -39,7 +41,8 @@ export default function Tasks() {
     setIsModalOpen(false);
   }
 
-  function onClose() { // close the modal
+  function onClose() {
+    // close the modal
     methods.reset();
     setIsModalOpen(false);
   }

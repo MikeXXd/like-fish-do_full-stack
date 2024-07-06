@@ -30,7 +30,7 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
   const [achievementProgress, setAchievementProgress] = useState<number>(0);
   const [isRitualMenuOpen, setIsRitualMenuOpen] = useState(false);
   const [isRitualDeleting, setIsRitualDeleting] = useState(false); // showing JSX deleting state
-  const [isDescriptionFull, setIsDescriptionFull] = useState(false); //for showing full description
+  const [isAllInfoVisible, setIsAllInfoVisible] = useState(false); //for showing full description and option for adding achievement
   const [shouldOpenMenu, setShouldOpenMenu] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeMenuRef = useRef<HTMLDivElement>(null);
@@ -62,21 +62,18 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
 
   // --opening menu and also dealing with full description if needed----------------
   useEffect(() => {
-    if (!isDescriptionFull && shouldOpenMenu) {
+    if (shouldOpenMenu) {
       setIsRitualMenuOpen(true);
       setShouldOpenMenu(false); // Reset for next time
     }
-  }, [isDescriptionFull, shouldOpenMenu]);
+  }, [isAllInfoVisible, shouldOpenMenu]);
 
   function onMenuOpen() {
-    setIsDescriptionFull(false);
     setShouldOpenMenu(true);
   }
 
   useEffect(() => {
-    setAchievementProgress(
-      getRitualAchievementInPercentage(ritual)
-    );
+    setAchievementProgress(getRitualAchievementInPercentage(ritual));
   }, [ritual]);
 
   // --JSX--deleting-state---------------------------------------------------------
@@ -135,30 +132,44 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
             <span className="sr-only">unread messages</span>
           </span>
           {/* --left-side---title-------------------------------- */}
-          <div className="flex flex-col p-2 col-span-8 sm:col-span-4 md:col-span-3  font-semibold text-2xl sm:text-lg transition-all">
+          <div className="flex flex-col p-2 col-span-8 sm:col-span-4 md:col-span-3 font-semibold text-2xl sm:text-lg transition-all">
             <button
               className="ps-4 truncate"
               type="button"
               onClick={() =>
-                !isRitualMenuOpen && setIsDescriptionFull(!isDescriptionFull)
+                !isRitualMenuOpen && setIsAllInfoVisible(!isAllInfoVisible)
               }
             >
               {ritual.title}
             </button>{" "}
-            {isDescriptionFull && (
-              <div className="flex justify-start items-center gap-1 min-w-full">
+            {isAllInfoVisible && (
+              <>
+                <div className="flex justify-start items-center gap-1 min-w-full">
+                  <button
+                    onClick={() => addPermormance(ritual)}
+                    className="hover:scale-125 transition-transform"
+                  >
+                    <Sparkle
+                      size={ICON_SIZE}
+                      className="text-gray-500 hover:text-green-600 "
+                    />
+                  </button>
+                  <span>{`${ritual.performed.length}/${ritual.frequency} `}</span>
+                  <span className="text-sm">{ritual._timeBase}</span>
+                </div>
                 <button
-                  onClick={() => addPermormance(ritual)}
-                  className="hover:scale-125 transition-transform"
+                  onClick={() =>
+                    !isRitualMenuOpen && setIsAllInfoVisible(!isAllInfoVisible)
+                  }
+                  type="button"
+                  className={cc(
+                    "block sm:hidden overflow-hidden px-1 text-ellipsis font-normal text-base",
+                    !isAllInfoVisible && "truncate"
+                  )}
                 >
-                  <Sparkle
-                    size={ICON_SIZE}
-                    className="text-gray-500 hover:text-green-600 "
-                  />
-                </button>
-                <span>{`${ritual.performed.length}/${ritual.frequency} `}</span>
-                <span className="text-sm">{ritual._timeBase}</span>
-              </div>
+                  {ritual.description}
+                </button>{" "}
+              </>
             )}
           </div>
           {/* ----right-side---description and icons------------------------------ */}
@@ -167,12 +178,12 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
           >
             <button
               onClick={() =>
-                !isRitualMenuOpen && setIsDescriptionFull(!isDescriptionFull)
+                !isRitualMenuOpen && setIsAllInfoVisible(!isAllInfoVisible)
               }
               type="button"
               className={cc(
                 "hidden sm:block overflow-hidden px-1 text-ellipsis",
-                !isDescriptionFull && "truncate"
+                !isAllInfoVisible && "truncate"
               )}
             >
               {ritual.description}

@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 interface Props {
-  labelName:string
+  labelName: string;
   registerName: string;
   errorMessages: string | undefined;
   defaultValue?: string;
