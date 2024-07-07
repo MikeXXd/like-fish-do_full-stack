@@ -25,8 +25,8 @@ export default function ritualTimeSortingValue(ritual: Ritual) {
     startOfTimebase = startOfDay(now);
   } else if (ritual._timeBase === RITUAL_TIME_BASE[1]) {
     // weekly
-    endOfTimebase = endOfWeek(now);
-    startOfTimebase = startOfWeek(now);
+    endOfTimebase = endOfWeek(now, { weekStartsOn: 1 });
+    startOfTimebase = startOfWeek(now, { weekStartsOn: 1 });
   } else if (ritual._timeBase === RITUAL_TIME_BASE[2]) {
     // monthly
     endOfTimebase = endOfMonth(now);
