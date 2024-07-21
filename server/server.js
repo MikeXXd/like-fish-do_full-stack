@@ -1,31 +1,33 @@
-const morgan = require("morgan");
+const winston = require("winston");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const dbConnection = require("./db/db.js");
-
+require("./middleware/logging")()
+const taskRouter = require("./routes/tasks.js");
+const ritualRouter = require("./routes/rituals.js");
+const magicWordRouter = require("./routes/magicWords.js");
 const app = express();
+
+// Middleware
 app.use(cors()); // middleware to allow cross-origin requests
 app.use(express.json()); // middleware to parse json data
 
-if (app.get("env") === "development") {
-  app.use(morgan("dev")); // middleware to log requests
-  console.log(`Morgan enabled...${app.get("env")}`);
-}
 
+// synchonous and asynchronous ERRORS, for testing purposes
+// throw new Error("Something failed during startup");
+// const p = Promise.reject(new Error("Something failed miserably!"));
+// p.then(() => console.log("Done"));
 
-console.log(`Current NODE_ENV: ${process.env.NODE_ENV}`);
 const port = process.env.PORT || 3001;
-
-const taskRouter = require("./routes/tasks.js");
-const ritualRouter = require("./routes/rituals.js");
 
 app.use("/", taskRouter);
 app.use("/tasks", taskRouter);
 app.use("/rituals", ritualRouter);
+app.use("/magic_words", magicWordRouter);
 
 app.listen(port, () => {
-  console.log(`Server has started at port: ${port}`);
+  winston.info(`Server has started at port: ${port}`);
 });
 
 dbConnection();
