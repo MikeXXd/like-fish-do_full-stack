@@ -48,7 +48,7 @@ export function TaskListItem({ task }: Props) {
   const methodes = useForm<TaskFormData>({ resolver: zodResolver(taskSchema) });
   const errors = methodes.formState.errors;
 
-  const timeLasting = formatDistance(task._createdAt, new Date(), {
+  const timeLasting = formatDistance(new Date(task._createdAt), new Date(), {
     addSuffix: true
   });
 
