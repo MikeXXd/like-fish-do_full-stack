@@ -28,7 +28,7 @@ export function MagicWords() {
     // add new Power Word TODO: use loudash in this case => learn
     const newMagicWord: MagicWord = {
       title: data.title,
-      note: data.description,
+      note: data.note,
       importance: data.importance
     };
     addMagicWord(newMagicWord);

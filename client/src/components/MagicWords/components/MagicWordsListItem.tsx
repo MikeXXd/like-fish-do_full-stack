@@ -24,7 +24,7 @@ export default function RitualsListItem({
   const { editMagicWord, deleteMagicWord } = useMagicWords();
   const [isMagicWordMenuOpen, setIsMagicWordMenuOpen] = useState(false);
   const [isMagicWordDeleting, setIsMagicWordDeleting] = useState(false); // showing JSX deleting state
-  const [isImportanceVisible, setIsImportanceVisible] = useState(false);
+  const [isImportanceIconVisible, setIsImportanceIconVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeMenuRef = useRef<HTMLDivElement>(null);
   useActionOnOutsideClick(isMagicWordMenuOpen, closeMenuRef, () =>
@@ -37,7 +37,7 @@ export default function RitualsListItem({
 
   function onSubmit(data: FieldValues) {
     const editedMagicW: MagicWord = {
-      _id: magicWord._id,
+      ...magicWord,
       title: data.title,
       note: data.note,
       importance: data.importance
@@ -91,48 +91,28 @@ export default function RitualsListItem({
       <>
         <div
           className={cc(
-            "relative flex mx-2 bg-slate-200 rounded-md hover:bg-slate-100 transition-all",
+            "relative flex mx-2 bg-slate-200 rounded-md hover:bg-slate-100 transition-all max-w-",
             isMagicWordMenuOpen
               ? "border-2 border-orange-400"
               : "border-transparent border-2"
           )}
         >
           {/* --left-side---title-------------------------------- */}
-          <div className="flex flex-col p-2 font-semibold text-sm sm:text-lg transition-all">
-            <button
-              className="ps-4 truncate"
-              type="button"
-              onClick={() =>
-                !isMagicWordMenuOpen &&
-                setIsMagicWordMenuOpen(!isMagicWordMenuOpen)
-              }
-            >
+          <div className="p-2 font-semibold text-lg sm:text-xl transition-all">
+           
               {magicWord.title}
-            </button>{" "}
+            
           </div>
           {/* ----right-side---note and icons------------------------------ */}
           <div className={`flex items-center gap-3 `}>
-            <button
-              onClick={() =>
-                !isMagicWordMenuOpen &&
-                setIsImportanceVisible(!isImportanceVisible)
-              }
-              type="button"
-              className={cc(
-                "hidden sm:block overflow-hidden px-1 text-ellipsis",
-                !isImportanceVisible && "truncate"
-              )}
-            >
-              {magicWord.note}
-            </button>
             {!isMagicWordMenuOpen ? (
               //----- menu close -------------------------------------------------------
               <div className="flex items-center gap-1">
                 {" "}
-                <ImportanceIconFish
+                {isImportanceIconVisible && <ImportanceIconFish
                   importance={magicWord.importance}
                   size={ICON_SIZE}
-                />
+                />}
                 <button
                   onClick={onMenuOpen}
                   className="hover:scale-125 transition-transform"
@@ -210,7 +190,7 @@ export default function RitualsListItem({
                 labelName="note"
                 registerName="note"
                 errorMessages={errors.note?.message}
-                defaultValue={magicWord.note}
+                defaultValue={magicWord.note || ""}
               />
 
               {/* --Importance------------------------------------------ */}

@@ -44,10 +44,10 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function addMagicWord(magicWord: MagicWord) {
+    console.log("magicWords: ", magicWord)
     try {
-      const res = await apiClient.post("/magic_Words", magicWord);
+      const res = await apiClient.post("/magic_words", magicWord);
       const data = res.data;
-      console.log("magicWords: ", data);
       setMagicWords([...magicWords, data]);
     } catch (error) {
       console.log(error);
@@ -67,8 +67,9 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
   }
 
   async function editMagicWord(editedMagicW: MagicWord) {
+    console.log("editedMagicW: ", editedMagicW);
     try {
-      const res = await apiClient.put(`/magicWords/${editedMagicW._id}`, {
+      const res = await apiClient.put(`/magic_words/${editedMagicW._id}`, {
         ...editedMagicW
       });
       console.log("Magic Word edited response: ", res);

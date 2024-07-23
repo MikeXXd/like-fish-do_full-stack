@@ -5,7 +5,7 @@ const router = express.Router();
 router
   .route("/")
   .get(async (_, res) => {
-    const MagicWord = await Magic_Word.find().sort("title");
+    const MagicWord = await Magic_Word.find().sort("title").select("_id title note importance");
     res.status(200).json(MagicWord);
   })
   .post(async (req, res) => {
