@@ -7,7 +7,7 @@ import { useActionOnOutsideClick } from "../hooks/useActionOnOutsideClick";
 const LINKS = [
   { name: "Tasks", path: "/tasks" },
   { name: "Rituals", path: "/rituals" },
-  { name: "Statistics", path: "/statistics" },
+  { name: "Magic-W", path: "/magic_words" },
   { name: "About", path: "/about" }
 ] as const;
 

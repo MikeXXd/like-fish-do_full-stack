@@ -7,10 +7,8 @@ const Magic_Words = mongoose.model(
     title: { type: String, required: true },
     note: { type: String, default: null },
     importance: {
-      type: Number,
-      default: 1,
-      min: 1,
-      max: 5,
+      type: String,
+      enum: ["low", "medium", "high"],
     },
   }),
 );
@@ -19,7 +17,7 @@ function validateMagicWord(magicWord) {
   const schema = Joi.object({
     title: Joi.string().required(),
     note: Joi.string(),
-    importance: Joi.number().min(1).max(5),
+    importance: Joi.string().valid("low", "medium", "high")
   });
 
   return schema.validate(magicWord);
