@@ -31,7 +31,6 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
   const [isRitualMenuOpen, setIsRitualMenuOpen] = useState(false);
   const [isRitualDeleting, setIsRitualDeleting] = useState(false); // showing JSX deleting state
   const [isAllInfoVisible, setIsAllInfoVisible] = useState(false); //for showing full description and option for adding achievement
-  const [shouldOpenMenu, setShouldOpenMenu] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeMenuRef = useRef<HTMLDivElement>(null);
   useActionOnOutsideClick(isRitualMenuOpen, closeMenuRef, () =>
@@ -60,16 +59,8 @@ export default function RitualsListItem({ ritual }: { ritual: Ritual }) {
     setIsModalOpen(false);
   }
 
-  // --opening menu and also dealing with full description if needed----------------
-  useEffect(() => {
-    if (shouldOpenMenu) {
-      setIsRitualMenuOpen(true);
-      setShouldOpenMenu(false); // Reset for next time
-    }
-  }, [isAllInfoVisible, shouldOpenMenu]);
-
   function onMenuOpen() {
-    setShouldOpenMenu(true);
+    setIsRitualMenuOpen(true);
   }
 
   useEffect(() => {
