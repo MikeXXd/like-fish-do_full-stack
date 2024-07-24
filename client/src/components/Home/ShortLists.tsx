@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import useTasks from "../../Tasks/hooks/useTasks";
 import { ReactNode } from "react";
-import useRituals from "../../Rituals/hooks/useRituals";
-import getRitualAchievementInPercentage from "../../Rituals/util/ritualAchievementInPercentage";
+
+import useTasks from "../Tasks/hooks/useTasks";
+import useRituals from "../Rituals/hooks/useRituals";
+import getRitualAchievementInPercentage from "../Rituals/util/ritualAchievementInPercentage";
 
 export default function ShortLists() {
   const { tasks } = useTasks();
