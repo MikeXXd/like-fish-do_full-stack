@@ -5,7 +5,7 @@ import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
 import { Modal_Input_Text } from "../../Modal/Modal_Input_Text";
 import ModalFooter from "../../Modal/ModalFooter";
-import TitlePlusBtn from "../../TitlePlusBtn";
+import TitleAndBtns from "../../TitleAndBtns";
 import { RitualFormData, ritualSchema } from "../constants";
 import { Ritual } from "../contexts/Ritual";
 import useRituals from "../hooks/useRituals";
@@ -52,7 +52,11 @@ export function Rituals() {
     <>
       <div className="flex flex-col items-center h-screen">
         <div className="flex justify-center items-center flex-col flex-wrap min-w-[300px] w-full max-w-[800px] h-fit text-gray-800 bg-slate-300 rounded-md p-1 gap-4">
-          <TitlePlusBtn title="Rituals" onClick={() => setIsModalOpen(true)} />
+          <TitleAndBtns
+            title="Rituals"
+            onPlusClick={() => setIsModalOpen(true)}
+            onSettingClick={() => {}}
+          />
         </div>
         <RitualsList />
       </div>

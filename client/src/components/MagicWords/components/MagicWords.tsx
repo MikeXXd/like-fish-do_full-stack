@@ -5,14 +5,14 @@ import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
 import { Modal_Input_Text } from "../../Modal/Modal_Input_Text";
 import ModalFooter from "../../Modal/ModalFooter";
-import TitlePlusBtn from "../../TitlePlusBtn";
+import TitleAndBtns from "../../TitleAndBtns";
 import { MagicWordFormData, magicWordSchema } from "../constants";
 import { MagicWord } from "../contexts/MagicWord";
 import useMagicWords from "../hooks/useMagicWords";
 import MagicWordsList from "./MagicWordsList";
 
 export function MagicWords() {
-  const { addMagicWord } = useMagicWords();
+  const { addMagicWord, toggleImportanceVisibility } = useMagicWords();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const methodes = useForm<MagicWordFormData>({
     resolver: zodResolver(magicWordSchema)
@@ -46,9 +46,10 @@ export function MagicWords() {
     <>
       <div className="flex flex-col items-center h-screen">
         <div className="flex justify-center items-center flex-col flex-wrap min-w-[300px] w-full max-w-[800px] h-fit text-gray-800 bg-slate-300 rounded-md p-1 gap-4">
-          <TitlePlusBtn
+          <TitleAndBtns
             title="Magic Words"
-            onClick={() => setIsModalOpen(true)}
+            onPlusClick={() => setIsModalOpen(true)}
+            onSettingClick={toggleImportanceVisibility}
           />
         </div>
         <MagicWordsList />

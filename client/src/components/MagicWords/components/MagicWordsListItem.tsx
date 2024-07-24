@@ -21,10 +21,10 @@ export default function RitualsListItem({
 }: {
   magicWord: MagicWord;
 }) {
-  const { editMagicWord, deleteMagicWord } = useMagicWords();
+  const { editMagicWord, deleteMagicWord, importanceVisibility } =
+    useMagicWords();
   const [isMagicWordMenuOpen, setIsMagicWordMenuOpen] = useState(false);
   const [isMagicWordDeleting, setIsMagicWordDeleting] = useState(false); // showing JSX deleting state
-  const [isImportanceIconVisible, setIsImportanceIconVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeMenuRef = useRef<HTMLDivElement>(null);
   useActionOnOutsideClick(isMagicWordMenuOpen, closeMenuRef, () =>
@@ -99,9 +99,7 @@ export default function RitualsListItem({
         >
           {/* --left-side---title-------------------------------- */}
           <div className="p-2 font-semibold text-lg sm:text-xl transition-all">
-           
-              {magicWord.title}
-            
+            {magicWord.title}
           </div>
           {/* ----right-side---note and icons------------------------------ */}
           <div className={`flex items-center gap-3 `}>
@@ -109,10 +107,12 @@ export default function RitualsListItem({
               //----- menu close -------------------------------------------------------
               <div className="flex items-center gap-1">
                 {" "}
-                {isImportanceIconVisible && <ImportanceIconFish
-                  importance={magicWord.importance}
-                  size={ICON_SIZE}
-                />}
+                {importanceVisibility && (
+                  <ImportanceIconFish
+                    importance={magicWord.importance}
+                    size={ICON_SIZE}
+                  />
+                )}
                 <button
                   onClick={onMenuOpen}
                   className="hover:scale-125 transition-transform"

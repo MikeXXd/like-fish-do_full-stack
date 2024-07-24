@@ -21,12 +21,15 @@ interface MagicWordContext {
   addMagicWord: (magicWord: MagicWord) => void;
   deleteMagicWord: (magicWord: MagicWord) => void;
   editMagicWord: (magicWord: MagicWord) => void;
+  importanceVisibility: boolean;
+  toggleImportanceVisibility: () => void;
 }
 
 export const Context = createContext<MagicWordContext>({} as MagicWordContext);
 
 export function MagicWordsProvider({ children }: { children: ReactNode }) {
   const [magicWords, setMagicWords] = useState<MagicWord[]>([]);
+  const [importanceVisibility, setImportanceVisibility] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -44,7 +47,7 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function addMagicWord(magicWord: MagicWord) {
-    console.log("magicWords: ", magicWord)
+    console.log("magicWords: ", magicWord);
     try {
       const res = await apiClient.post("/magic_words", magicWord);
       const data = res.data;
@@ -82,13 +85,19 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function toggleImportanceVisibility() {
+    setImportanceVisibility(!importanceVisibility);
+  }
+
   return (
     <Context.Provider
       value={{
         magicWords,
         addMagicWord,
         deleteMagicWord,
-        editMagicWord
+        editMagicWord,
+        toggleImportanceVisibility,
+        importanceVisibility
       }}
     >
       {children}

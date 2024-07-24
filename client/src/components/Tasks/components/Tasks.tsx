@@ -5,7 +5,7 @@ import Modal from "../../Modal/Modal";
 import { Modal_Input_Importance } from "../../Modal/Modal_Input_Importance";
 import { Modal_Input_TextArea } from "../../Modal/Modal_Input_TextArea";
 import ModalFooter from "../../Modal/ModalFooter";
-import TitlePlusBtn from "../../TitlePlusBtn";
+import TitleAndBtns from "../../TitleAndBtns";
 import { TaskFormData, taskSchema } from "../constants";
 import { Task } from "../contexts/Task";
 import useTasks from "../hooks/useTasks";
@@ -51,7 +51,11 @@ export default function Tasks() {
     <>
       <div className="flex justify-center h-screen">
         <div className="flex justify-center items-center flex-col flex-wrap min-w-[300px] w-full  max-w-[800px] h-fit bg-slate-300 rounded-md p-1 gap-4">
-          <TitlePlusBtn title="Tasks" onClick={() => setIsModalOpen(true)} />
+          <TitleAndBtns
+            title="Tasks"
+            onPlusClick={() => setIsModalOpen(true)}
+            onSettingClick={() => {}}
+          />
           <FilterBar onChange={setSearch} searchName={search} />
           <TaskList searchName={search} />
         </div>
