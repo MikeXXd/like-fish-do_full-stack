@@ -1,5 +1,5 @@
 const express = require("express");
-const Tasks = require("../db/models/Tasks");
+const Tasks = require("../db/models/task");
 const { isValidObjectId } = require("mongoose");
 
 const router = express.Router();

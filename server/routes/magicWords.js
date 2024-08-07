@@ -1,5 +1,5 @@
 const express = require("express");
-const { validate, Magic_Word } = require("../db/models/MagicWord");
+const { validate, Magic_Word } = require("../db/models/magicWord");
 const router = express.Router();
 
 router
