@@ -11,7 +11,7 @@ export default function HomePage() {
         Welcome to Life Manager
       </h1>
       <div className="px-4 flex justify-center items-center h-28 w-full  max-w-[800px] ">
-      <MagicWordAppear frequencyInMiliSec={4000} size="2xl" />
+        <MagicWordAppear frequencyInMiliSec={4000} size="2xl" />
       </div>
       <div className="flex justify-center items-center flex-col flex-wrap min-w-[300px] w-full  max-w-[800px] h-fit bg-slate-300 rounded-md p-1 gap-4">
         <ShortLists />

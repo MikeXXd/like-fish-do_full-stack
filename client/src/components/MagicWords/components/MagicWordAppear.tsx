@@ -20,16 +20,16 @@ export function MagicWordAppear({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      getNewMagicWord()
+      getNewMagicWord();
     }, frequencyInMiliSec);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shownMagicW]);
 
-function getNewMagicWord() {
-  const randomIndex = Math.floor(Math.random() * magicWords.length);
-      setShownMagicW(magicWords[randomIndex].title);
-}
+  function getNewMagicWord() {
+    const randomIndex = Math.floor(Math.random() * magicWords.length);
+    setShownMagicW(magicWords[randomIndex].title);
+  }
   return (
     <button
       className={`text-${size} transition-all hover:border-white hover:font-bold cursor-pointer`}
@@ -39,5 +39,3 @@ function getNewMagicWord() {
     </button>
   );
 }
-
-
