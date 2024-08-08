@@ -1,14 +1,15 @@
+const auth = require("../middleware/auth");
 const express = require("express");
 const { validate, Magic_Word } = require("../db/models/magicWord");
 const router = express.Router();
 
 router
   .route("/")
-  .get(async (_, res) => {
+  .get(auth, async (_, res) => {
     const MagicWord = await Magic_Word.find().sort("title").select("_id title note importance");
     res.status(200).json(MagicWord);
   })
-  .post(async (req, res) => {
+  .post(auth, async (req, res) => {
     // validate the data from client
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -25,7 +26,7 @@ router
 
 router
   .route("/:id")
-  .get(async (req, res) => {
+  .get(auth, async (req, res) => {
     const powerWord = await Magic_Word.findById(req.params.id);
     if (!powerWord) {
       return res.status(404).json({ error: "Magic word not found" });
@@ -33,7 +34,7 @@ router
     res.status(200).json(powerWord);
   }
   )
-  .put(async (req, res) => {
+  .put(auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -48,7 +49,7 @@ router
     }
     res.status(200).json(updatedPowerWord);
   })
-  .delete(async (req, res) => {
+  .delete(auth, async (req, res) => {
     try {
       const deletedPowerWord = await Magic_Word.findByIdAndDelete(req.params.id);
       if (!deletedPowerWord) {

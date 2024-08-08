@@ -1,30 +1,47 @@
-process.env.NODE_ENV === "development" && (process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"); // SSL Validation OFF for development environment only (not recommended for production) 
+process.env.NODE_ENV === "development" &&
+  (process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"); // SSL Validation OFF for development environment only (not recommended for production)
 const express = require("express");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
-const { User, validate, passwordOptions } = require("../db/models/User");
+const {
+  User,
+  validateUser,
+  validateLogin,
+  passwordOptions,
+} = require("../db/models/User");
 const passwordComplexity = require("joi-password-complexity");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const router = express.Router();
 
+// --Login Route--
+router.post("/login", async (req, res) => {
+  const { error } = validateLogin(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-function sslValidationOFF() {
-  if (process.env.NODE_ENV !== "development") {
-    console.log(
-      "SSL Validation turned off function is only accepted to be used in development ENV. It is not recommended in production."
-    );
-    return;
+  const user = await User.findOne({ email: req.body.email });
+  if (!user || !user.isConfirmed) {
+    return res
+      .status(400)
+      .send("Invalid email or password, or email not confirmed.");
   }
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
 
-function sslValidationON() {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
-}
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) {
+    return res
+      .status(400)
+      .send("Invalid email or password, or email not confirmed.");
+  }
 
+  const JWToken = user.generateAuthToken();
+  res
+    .header("x-auth-token", JWToken)
+    .send(_.pick(user, ["_id", "name", "email"]));
+});
+
+// --Signup Route--
 router.post("/signup", async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validateUser(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const password = passwordComplexity(passwordOptions, "Password").validate(
@@ -42,7 +59,6 @@ router.post("/signup", async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(user.password, salt);
   user.password = hashedPassword;
-
   await user.save();
 
   // Send confirmation email
@@ -66,7 +82,6 @@ router.post("/signup", async (req, res) => {
     if (error) {
       console.log(error);
       await User.deleteOne({ email: user.email });
-  
       return res.status(500).send("Error sending confirmation email.");
     }
     res
@@ -75,7 +90,7 @@ router.post("/signup", async (req, res) => {
   });
 });
 
-// Confirmation Route
+// --Confirmation Route--
 router.get("/confirm/:token", async (req, res) => {
   const user = await User.findOne({ confirmationToken: req.params.token });
   if (!user) return res.status(400).send("Invalid token.");
@@ -83,7 +98,6 @@ router.get("/confirm/:token", async (req, res) => {
   user.isConfirmed = true;
   user.confirmationToken = undefined;
   await user.save();
-  console.log("Account confirmed. You can now log in.");
   res.status(200).send("Account confirmed. You can now log in.");
 });
 

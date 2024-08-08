@@ -2,7 +2,6 @@ const taskRouter = require("../routes/tasks.js");
 const ritualRouter = require("../routes/rituals.js");
 const magicWordRouter = require("../routes/magicWords.js");
 const user = require("../routes/users.js");
-const auth = require("../routes/auth.js");
 
 module.exports = function(app) {
   app.use("/", taskRouter);
@@ -10,6 +9,5 @@ module.exports = function(app) {
   app.use("/rituals", ritualRouter);
   app.use("/magic_words", magicWordRouter);
   app.use("/users", user);
-  app.use("/auth", auth);
 };
 
