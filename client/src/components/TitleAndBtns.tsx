@@ -4,19 +4,21 @@ interface Props {
   title: string;
   onPlusClick: () => void;
   onSettingClick: () => void;
+  settingTitle?: string;
 }
 
 export default function TitleAndBtns({
   title,
   onPlusClick,
-  onSettingClick
+  onSettingClick,
+  settingTitle = "Settings"
 }: Props) {
   return (
     <div className="p-2 flex justify-between items-center w-full">
       <button
         onClick={onSettingClick}
         className=" outline-none hover:scale-110 hover:rotate-45 right-0 bottom-0 transition-transform"
-        title="Settings"
+        title={settingTitle}
       >
         <Settings size={40} strokeWidth={1} />
       </button>

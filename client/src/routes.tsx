@@ -7,6 +7,10 @@ import { TasksPage } from "./pages/TasksPage.tsx";
 import { RitualsPage } from "./pages/RitualsPage.tsx";
 import { MagicWordsPage } from "./pages/MagicWordsPage.tsx";
 import { AboutPage } from "./pages/AboutPage.tsx";
+import { UsersLayout } from "./pages/UsersLayout.tsx";
+import Login from "./components/Users/components/Login.tsx";
+import Signup from "./components/Users/components/Signup.tsx";
+import Account from "./components/Users/components/Account.tsx";
 
 export const routes = createBrowserRouter([
   {
@@ -21,7 +25,17 @@ export const routes = createBrowserRouter([
         element: <RitualsPage />
       },
       { path: "magic_words", element: <MagicWordsPage /> },
-      { path: "about", element: <AboutPage /> }
+      { path: "about", element: <AboutPage /> },
+      {
+        path: "users",
+        element: <UsersLayout />,
+        children: [
+          { index: true, element: <Account /> },
+
+          { path: "login", element: <Login /> },
+          { path: "signup", element: <Signup /> }
+        ]
+      }
     ]
   }
 ]);

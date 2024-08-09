@@ -98,7 +98,7 @@ router.get("/confirm/:token", async (req, res) => {
   user.isConfirmed = true;
   user.confirmationToken = undefined;
   await user.save();
-  res.status(200).send("Account confirmed. You can now log in.");
+  res.status(200).send("Account confirmed. You can now <a href='http://localhost:3001/users/login'>log in</a>.");
 });
 
 module.exports = router;

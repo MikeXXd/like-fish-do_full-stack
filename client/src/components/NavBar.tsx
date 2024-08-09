@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { cc } from "../util/cc";
 import { useActionOnOutsideClick } from "../hooks/useActionOnOutsideClick";
+import useUsers from "./Users/hooks/useUsers";
 
 const LINKS = [
   { name: "Tasks", path: "/tasks" },
@@ -12,10 +13,10 @@ const LINKS = [
 ] as const;
 
 function NavBar() {
+  const { user } = useUsers();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   useActionOnOutsideClick(isMenuOpen, menuRef, () => setIsMenuOpen(false));
-  const loggedin = true;
 
   return (
     <div className="sticky top-0 z-10 flex border-gray-500 bg-gray-500 text-slate-200">
@@ -49,16 +50,13 @@ function NavBar() {
               {link.name}
             </NavLink>
           ))}
-          <Link
-                to="/users"
-                className=" hover:text-white py-1 px-2"
-              >
-                {loggedin ? (
+          <Link to="/users" className=" hover:text-white py-1 px-2">
+            {user ? (
               <div
                 className="text-orange-500 hover:scale-125 transition-transform"
                 title="log out"
               >
-                <Power size={24} color="skyblue"/>
+                <Power size={24} color="skyblue" />
               </div>
             ) : (
               <div
@@ -68,7 +66,7 @@ function NavBar() {
                 <Power size={24} />
               </div>
             )}
-              </Link>
+          </Link>
         </div>
 
         {/*Menu Hamburg*/}
@@ -99,12 +97,12 @@ function NavBar() {
               </Link>
             ))}
             <Link
-                to="/users"
-                className=" hover:text-white hover:bg-slate-600   focus:bg-slate-700 py-1 px-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                "Log in/out"
-              </Link>
+              to="/users"
+              className=" hover:text-white hover:bg-slate-600   focus:bg-slate-700 py-1 px-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              "Log in/out"
+            </Link>
           </div>
         </div>
       </nav>

@@ -5,7 +5,7 @@ const Joi = require("joi");
 const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, minlemgth: 5, maxlength: 50 },
+  name: { type: String, required: true, minlemgth: 3, maxlength: 50 },
   email: {
     type: String,
     requered: true,
@@ -34,7 +34,7 @@ const User = mongoose.model("User", userSchema);
 
 function validateUser(user) {
   const schema = Joi.object({
-    name: Joi.string().required().min(5).max(50),
+    name: Joi.string().required().min(3).max(50),
     email: Joi.string().email().required().min(5).max(255),
     password: Joi.string().min(5).max(255).required(),
   });
