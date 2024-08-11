@@ -34,7 +34,7 @@ export default function Login() {
   return (
     <>
       {user && (
-        <h2 className="text-2xl pb-5 text-violet-600">{`You are now logged in with account ${user?.email}`}</h2>
+        <h2 className="text-2xl p-5 text-violet-600">{`You are now logged in with account ${user?.email}`}</h2>
       )}
       <div className="flex justify-center flex-col flex-wrap gap-3 mt-8 sm:max-w-fit w-full border-solid border-2 rounded-md p-5">
         <h3 className="text-2xl pb-2">Log in to your account</h3>

@@ -1,5 +1,6 @@
 process.env.NODE_ENV === "development" &&
   (process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"); // SSL Validation OFF for development environment only (not recommended for production)
+const auth = require("../middleware/auth");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
@@ -37,7 +38,13 @@ router.post("/login", async (req, res) => {
   res
     .header("x-auth-token", JWToken)
     .send(_.pick(user, ["_id", "name", "email"]));
+})
+
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  res.send(user);
 });
+
 
 // --Signup Route--
 router.post("/signup", async (req, res) => {

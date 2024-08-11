@@ -1,6 +1,6 @@
 import useUsers from "../hooks/useUsers";
 
-export default function Logout() {
+export default function Logout1() {
   const { user, logout } = useUsers();
 
   return (

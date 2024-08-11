@@ -3,6 +3,7 @@ import { Importance } from "../../../constants";
 // import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import apiClient from "../../../services/api-client";
 import { CanceledError } from "axios";
+import useUsers from "../../Users/hooks/useUsers";
 
 // const LOCAL_STORAGE_RITUALS = {
 //   KEY: "rituales",
@@ -30,21 +31,26 @@ export const Context = createContext<MagicWordContext>({} as MagicWordContext);
 export function MagicWordsProvider({ children }: { children: ReactNode }) {
   const [magicWords, setMagicWords] = useState<MagicWord[]>([]);
   const [importanceVisibility, setImportanceVisibility] = useState(false);
+  const { token } = useUsers();
 
   useEffect(() => {
-    const controller = new AbortController();
-    apiClient
-      .get("/magic_words", { signal: controller.signal })
-      .then((magicWords) => {
-        setMagicWords(magicWords.data);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        console.log(err.message);
-      });
+    console.log("tokenChecked:", token);
+    if (token) {
+      console.log("tokenChanged:", token);
+      const controller = new AbortController();
+      apiClient
+        .get("/magic_words", { signal: controller.signal })
+        .then((magicWords) => {
+          setMagicWords(magicWords.data);
+        })
+        .catch((err) => {
+          if (err instanceof CanceledError) return;
+          console.log(err.message);
+        });
 
-    return () => controller.abort();
-  }, []);
+      return () => controller.abort();
+    }
+  }, [token]);
 
   async function addMagicWord(magicWord: MagicWord) {
     console.log("magicWords: ", magicWord);

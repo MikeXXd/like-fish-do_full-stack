@@ -1,4 +1,5 @@
-import { ReactNode, createContext, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import apiClient from "../../../services/api-client";
 import {
@@ -27,6 +28,21 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useLocalStorage<string | null>(LS_AUTH, null);
   const [info, setInfo] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (token) {
+      apiClient
+        .get("/users/me")
+        .then((res) => {
+          const userData = res.data;
+          setUser(userData);
+          console.log("getMe", res.data);
+        })
+        .catch((err) => {
+          console.log("getMeError", err);
+        });
+    }
+  }, [token]);
 
   function login(user: LoginUser) {
     apiClient

@@ -101,7 +101,7 @@ function NavBar() {
               className=" hover:text-white hover:bg-slate-600   focus:bg-slate-700 py-1 px-2"
               onClick={() => setIsMenuOpen(false)}
             >
-              "Log in/out"
+              {user ? "Log out" : "Log in"}
             </Link>
           </div>
         </div>
