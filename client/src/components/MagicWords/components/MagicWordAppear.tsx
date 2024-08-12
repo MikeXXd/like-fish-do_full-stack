@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 // import { Importance } from "../../../constants";
 import useMagicWords from "../hooks/useMagicWords";
 
+
 interface Props {
   size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   // length?: "short" | "medium" | "long" | "any";

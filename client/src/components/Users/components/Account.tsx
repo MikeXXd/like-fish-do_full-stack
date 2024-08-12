@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import useUsers from "../hooks/useUsers";
 import apiClient from "../../../services/api-client";
 import Logout1 from "./Logout1";
+import { Link } from "react-router-dom";
 
 export default function Account() {
   const { token } = useUsers();
@@ -24,7 +25,7 @@ export default function Account() {
         <Logout1 />
       ) : (
         <h3 className="text-2xl pb-2">
-          Please log in to your account or create a new account.
+          Please <Link to="/users/login" className="font-bold hover:text-white  focus:text-green-500 py-1 px-2">log in</Link> to your account or <Link to="/users/signup" className="font-bold hover:text-white  focus:text-green-500 py-1 px-2">create a new account</Link>.
         </h3>
       )}
     </div>

@@ -29,8 +29,6 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   const [info, setInfo] = useState("");
   const [error, setError] = useState("");
 
-  
-
   useEffect(() => {
     if (token) {
       apiClient
@@ -53,8 +51,8 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         const token = res.headers["x-auth-token"];
         if (token) {
           setToken(token);
-          window.location.reload();
-          window.location.replace("/");
+          window.location.reload(); // new token in localStorage,so restarting app so that new token is sent in the headers.
+          window.location.replace("/"); //redirecting to home page after login
         } else {
           setError("Login failed");
           console.error("Token not found in headers");
@@ -83,8 +81,8 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   function logout() {
     setToken(null);
     setUser(null);
-    window.location.reload();
-    window.location.replace("/users/login");
+    window.location.reload();  //localStorage is cleared so restarting app so that no token is sent in the headers anymore after logout. 
+    window.location.replace("/users/login"); //redirecting to login page after logout
   }
 
   function resetInfoErrors() {
