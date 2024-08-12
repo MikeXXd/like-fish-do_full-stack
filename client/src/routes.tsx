@@ -1,16 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import Account from "./components/Users/components/Account.tsx";
+import LogInOut from "./components/Users/components/LogInOut.tsx";
+import Signup from "./components/Users/components/Signup.tsx";
 import RootLayout from "./layouts/RootLayout.tsx";
+import { AboutPage } from "./pages/AboutPage.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
-import { TasksPage } from "./pages/TasksPage.tsx";
-import { RitualsPage } from "./pages/RitualsPage.tsx";
 import { MagicWordsPage } from "./pages/MagicWordsPage.tsx";
-import { AboutPage } from "./pages/AboutPage.tsx";
+import { RitualsPage } from "./pages/RitualsPage.tsx";
+import { TasksPage } from "./pages/TasksPage.tsx";
 import { UsersLayout } from "./pages/UsersLayout.tsx";
-import Login from "./components/Users/components/Login.tsx";
-import Signup from "./components/Users/components/Signup.tsx";
-import Account from "./components/Users/components/Account.tsx";
 
 export const routes = createBrowserRouter([
   {
@@ -32,10 +32,12 @@ export const routes = createBrowserRouter([
         children: [
           { index: true, element: <Account /> },
 
-          { path: "login", element: <Login /> },
+          { path: "login", element: <LogInOut /> },
           { path: "signup", element: <Signup /> }
         ]
       }
     ]
   }
 ]);
+
+

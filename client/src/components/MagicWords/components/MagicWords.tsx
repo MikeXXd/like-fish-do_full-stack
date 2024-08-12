@@ -25,7 +25,6 @@ export function MagicWords() {
   }, []);
 
   function onSubmit(data: FieldValues) {
-    // add new Power Word TODO: use loudash in this case => learn
     const newMagicWord: MagicWord = {
       title: data.title,
       note: data.note,

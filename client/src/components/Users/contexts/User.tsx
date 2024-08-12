@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import apiClient from "../../../services/api-client";
 import {
@@ -29,6 +29,8 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   const [info, setInfo] = useState("");
   const [error, setError] = useState("");
 
+  
+
   useEffect(() => {
     if (token) {
       apiClient
@@ -52,6 +54,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         if (token) {
           setToken(token);
           window.location.reload();
+          window.location.replace("/");
         } else {
           setError("Login failed");
           console.error("Token not found in headers");
@@ -81,6 +84,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setUser(null);
     window.location.reload();
+    window.location.replace("/users/login");
   }
 
   function resetInfoErrors() {
