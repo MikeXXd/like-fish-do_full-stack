@@ -80,6 +80,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   function logout() {
     setToken(null);
     setUser(null);
+    window.location.reload();
   }
 
   function resetInfoErrors() {
