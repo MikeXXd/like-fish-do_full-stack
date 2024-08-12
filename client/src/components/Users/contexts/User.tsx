@@ -48,16 +48,14 @@ export function UsersProvider({ children }: { children: ReactNode }) {
     apiClient
       .post("/users/login", user)
       .then((res) => {
-        const data = res.data;
         const token = res.headers["x-auth-token"];
         if (token) {
           setToken(token);
+          window.location.reload();
         } else {
           setError("Login failed");
           console.error("Token not found in headers");
         }
-
-        setUser(data);
       })
       .catch((error) => {
         console.log("errorLogin", error);

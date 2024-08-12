@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
   const JWToken = user.generateAuthToken();
   res
     .header("x-auth-token", JWToken)
-    .send(_.pick(user, ["_id", "name", "email"]));
+    .send(user.name + " logged in successfully.");
 })
 
 router.get("/me", auth, async (req, res) => {
@@ -105,7 +105,7 @@ router.get("/confirm/:token", async (req, res) => {
   user.isConfirmed = true;
   user.confirmationToken = undefined;
   await user.save();
-  res.status(200).send("Account confirmed. You can now <a href='http://localhost:3001/users/login'>log in</a>.");
+  res.status(200).send("Account confirmed. You can now <a href='http://localhost:3001/users/login'>log in</a>."); //FIXME: the link is not working
 });
 
 module.exports = router;
