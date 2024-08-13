@@ -27,7 +27,7 @@ router
 router
   .route("/:id")
   .get(auth, async (req, res) => {
-    const powerWord = await Magic_Word.findById(req.params.id);
+    const powerWord = await Magic_Word.findById(req.params.id).select("-__v");
     if (!powerWord) {
       return res.status(404).json({ error: "Magic word not found" });
     } 
