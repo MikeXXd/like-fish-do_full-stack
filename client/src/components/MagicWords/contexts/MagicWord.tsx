@@ -82,10 +82,10 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
         ...editedMagicW
       });
       console.log("Magic Word edited response: ", res);
-      const updatedRituals = magicWords.map((magicWord) =>
+      const updatedMagicWord = magicWords.map((magicWord) =>
         magicWord._id === editedMagicW._id ? editedMagicW : magicWord
       );
-      setMagicWords(updatedRituals);
+      setMagicWords(updatedMagicWord);
     } catch (err) {
       console.log(err);
     }

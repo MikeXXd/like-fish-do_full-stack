@@ -7,10 +7,11 @@ export const ritualSchema = z.object({
   title: z
     .string()
     .min(3, { message: "Title must have at least 3 characters" })
-    .max(21, { message: "Title must have at most 32 characters" }),
+    .max(21, { message: "Title must have at most 21 characters" }),
   description: z
     .string()
-    .min(3, { message: "Description must have at least 3 characters" }),
+    .min(3, { message: "Description must have at least 3 characters" })
+    .max(255, { message: "Description must have at most 255 characters" }),
   importance: z.union([z.enum(IMPORTANCE), z.null()]).nullable(),
   timeBase: z.union([z.enum(RITUAL_TIME_BASE), z.null()]).nullable(),
   frequency: z.coerce

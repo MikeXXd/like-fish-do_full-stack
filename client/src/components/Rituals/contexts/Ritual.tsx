@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { Importance } from "../../../constants";
 // import { useLocalStorage } from "../../../hooks/useLocalStorage";
@@ -44,6 +45,10 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   const [sortedRituals, setSortedRituals] = useState<Ritual[]>([]);
 
   useEffect(() => {
+    fetchRituals();
+  }, []);
+
+  function fetchRituals() {
     const controller = new AbortController();
     apiClient
       .get("/rituals", { signal: controller.signal })
@@ -56,7 +61,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
       });
 
     return () => controller.abort();
-  }, []);
+  }
 
   // sorting rituals based on the remaining time within it's timeBase and frequency
   useEffect(() => {
@@ -68,38 +73,48 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   }, [rituals]);
 
   function addRitual(ritual: Ritual) {
-    apiClient
-      .post("/rituals", ritual)
-      .then((res) => {
-        // Optimistic update
-        const data = res.data;
-        console.log(data);
-        setRituals([...rituals, data]);
-      })
-      .catch((error) => console.log(error));
+    try {
+      const res = apiClient.post("/rituals", ritual);
+      console.log("Ritual added response: ", res);
+      // Optimistic update
+      setRituals([...rituals, ritual]);
+      // get reality from database
+      fetchRituals();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function deleteRitual(DeleteRitual: Ritual) {
-    apiClient
-      .delete("/rituals", { data: { id: DeleteRitual._id } })
-      .then(() => {
-        // Optimistic update
-        setRituals(rituals.filter((ritual) => ritual._id !== DeleteRitual._id));
-      })
-      .catch((error) => console.log(error));
+    try {
+      const res = apiClient.delete(`/rituals/${DeleteRitual._id}`);
+      console.log("Ritual deleted response: ", res);
+      setRituals(
+        rituals.filter((magicWord) => magicWord._id !== DeleteRitual._id)
+      );
+      fetchRituals();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function editRitual(editedRitual: Ritual) {
-    apiClient
-      .put("/rituals", { id: editedRitual._id, ...editedRitual })
-      .then(() => {
-        // Optimistic update
-        const updatedRituals = rituals.map((ritual) =>
-          ritual._id === editedRitual._id ? editedRitual : ritual
-        );
-        setRituals(updatedRituals);
-      })
-      .catch((error) => console.log(error));
+  async function editRitual(editedRitual: Ritual) {
+    try {
+      const ritualData = _.omit(editedRitual, ["history", "_id", "_createdAt"]);
+      console.log("ritualData", ritualData);
+      const res = await apiClient.put(
+        `/rituals/${editedRitual._id}`,
+        ritualData
+      );
+      console.log("Ritual edited response: ", res);
+      const updatedRituals = rituals.map((ritual) =>
+        ritual._id === editedRitual._id ? editedRitual : ritual
+      );
+      setRituals(updatedRituals);
+      fetchRituals();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function addPermormance(performedRitual: Ritual) {
@@ -107,12 +122,6 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
       ...performedRitual,
       performed: [...performedRitual.performed, new Date()]
     };
-    // Optimistic update
-    const updatedRituals = rituals.map((ritual) =>
-      ritual._id === performedRitual._id ? ritualWithNewPerformance : ritual
-    );
-    setRituals(updatedRituals);
-
     editRitual(ritualWithNewPerformance);
   }
 

@@ -25,7 +25,21 @@ export default function Account() {
         <Logout1 />
       ) : (
         <h3 className="text-2xl pb-2">
-          Please <Link to="/users/login" className="font-bold hover:text-white  focus:text-green-500 py-1 px-2">log in</Link> to your account or <Link to="/users/signup" className="font-bold hover:text-white  focus:text-green-500 py-1 px-2">create a new account</Link>.
+          Please{" "}
+          <Link
+            to="/users/login"
+            className="font-bold hover:text-white  focus:text-green-500 py-1 px-2"
+          >
+            log in
+          </Link>{" "}
+          to your account or{" "}
+          <Link
+            to="/users/signup"
+            className="font-bold hover:text-white  focus:text-green-500 py-1 px-2"
+          >
+            create a new account
+          </Link>
+          .
         </h3>
       )}
     </div>
