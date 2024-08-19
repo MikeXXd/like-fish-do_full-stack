@@ -24,7 +24,7 @@ const RitualSchema = new mongoose.Schema({
 
   function validateRitual(ritual) {
     const schema = Joi.object({
-      _id: Joi.string().optional(),
+      // _id: Joi.string().optional(),
       title: Joi.string().min(3).max(21).required(),
       description: Joi.string().min(3).max(255).allow(""),
       importance: Joi.string().valid("low", "medium", "high"),

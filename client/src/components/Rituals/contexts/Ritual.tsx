@@ -72,10 +72,9 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
     setSortedRituals(sortedRituals);
   }, [rituals]);
 
-  function addRitual(ritual: Ritual) {
+  async function addRitual(ritual: Ritual) {
     try {
-      const res = apiClient.post("/rituals", ritual);
-      console.log("Ritual added response: ", res);
+      await apiClient.post("/rituals", ritual);
       // Optimistic update
       setRituals([...rituals, ritual]);
       // get reality from database
@@ -85,10 +84,9 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function deleteRitual(DeleteRitual: Ritual) {
+  async function deleteRitual(DeleteRitual: Ritual) {
     try {
-      const res = apiClient.delete(`/rituals/${DeleteRitual._id}`);
-      console.log("Ritual deleted response: ", res);
+      await apiClient.delete(`/rituals/${DeleteRitual._id}`);
       setRituals(
         rituals.filter((magicWord) => magicWord._id !== DeleteRitual._id)
       );
@@ -101,12 +99,10 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   async function editRitual(editedRitual: Ritual) {
     try {
       const ritualData = _.omit(editedRitual, ["history", "_id", "_createdAt"]);
-      console.log("ritualData", ritualData);
-      const res = await apiClient.put(
+     await apiClient.put(
         `/rituals/${editedRitual._id}`,
         ritualData
       );
-      console.log("Ritual edited response: ", res);
       const updatedRituals = rituals.map((ritual) =>
         ritual._id === editedRitual._id ? editedRitual : ritual
       );
