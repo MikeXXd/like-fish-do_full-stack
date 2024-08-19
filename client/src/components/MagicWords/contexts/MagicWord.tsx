@@ -34,23 +34,25 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
   const { token } = useUsers();
 
   useEffect(() => {
-    console.log("tokenChecked:", token);
     if (token) {
-      console.log("tokenChanged:", token);
-      const controller = new AbortController();
-      apiClient
-        .get("/magic_words", { signal: controller.signal })
-        .then((magicWords) => {
-          setMagicWords(magicWords.data);
-        })
-        .catch((err) => {
-          if (err instanceof CanceledError) return;
-          console.log(err.message);
-        });
-
-      return () => controller.abort();
+      fetchPowerWords();
     }
   }, [token]);
+
+  function fetchPowerWords() {
+    const controller = new AbortController();
+    apiClient
+      .get("/magic_words", { signal: controller.signal })
+      .then((magicWords) => {
+        setMagicWords(magicWords.data);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        console.log(err.message);
+      });
+
+    return () => controller.abort();
+  }
 
   async function addMagicWord(magicWord: MagicWord) {
     console.log("magicWords: ", magicWord);
@@ -58,6 +60,7 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
       const res = await apiClient.post("/magic_words", magicWord);
       const data = res.data;
       setMagicWords([...magicWords, data]);
+      fetchPowerWords();
     } catch (error) {
       console.log(error);
     }
@@ -65,27 +68,26 @@ export function MagicWordsProvider({ children }: { children: ReactNode }) {
 
   async function deleteMagicWord(deleteMagicWord: MagicWord) {
     try {
-      const res = await apiClient.delete(`/magic_words/${deleteMagicWord._id}`);
-      console.log("Magic Word deleted response: ", res);
+      await apiClient.delete(`/magic_words/${deleteMagicWord._id}`);
       setMagicWords(
         magicWords.filter((magicWord) => magicWord._id !== deleteMagicWord._id)
       );
+      fetchPowerWords();
     } catch (error) {
       console.log(error);
     }
   }
 
   async function editMagicWord(editedMagicW: MagicWord) {
-    console.log("editedMagicW: ", editedMagicW);
     try {
-      const res = await apiClient.put(`/magic_words/${editedMagicW._id}`, {
+      await apiClient.put(`/magic_words/${editedMagicW._id}`, {
         ...editedMagicW
       });
-      console.log("Magic Word edited response: ", res);
       const updatedMagicWord = magicWords.map((magicWord) =>
         magicWord._id === editedMagicW._id ? editedMagicW : magicWord
       );
       setMagicWords(updatedMagicWord);
+      fetchPowerWords();
     } catch (err) {
       console.log(err);
     }

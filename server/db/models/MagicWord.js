@@ -10,15 +10,15 @@ const Magic_Words = mongoose.model(
       type: String,
       enum: ["low", "medium", "high"],
     },
-  }),
+  })
 );
 
 function validateMagicWord(magicWord) {
   const schema = Joi.object({
-    _id: Joi.string().optional(),
+    // _id: Joi.string().optional(),
     title: Joi.string().required(),
     note: Joi.string().allow(""),
-    importance: Joi.string().valid("low", "medium", "high")
+    importance: Joi.string().valid("low", "medium", "high"),
   });
 
   return schema.validate(magicWord);

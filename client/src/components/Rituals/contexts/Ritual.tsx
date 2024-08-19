@@ -45,6 +45,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   const [sortedRituals, setSortedRituals] = useState<Ritual[]>([]);
 
   useEffect(() => {
+    // FIXME: shall I use if token like in powerWords?
     fetchRituals();
   }, []);
 
@@ -99,10 +100,7 @@ export function RitualsProvider({ children }: { children: ReactNode }) {
   async function editRitual(editedRitual: Ritual) {
     try {
       const ritualData = _.omit(editedRitual, ["history", "_id", "_createdAt"]);
-     await apiClient.put(
-        `/rituals/${editedRitual._id}`,
-        ritualData
-      );
+      await apiClient.put(`/rituals/${editedRitual._id}`, ritualData);
       const updatedRituals = rituals.map((ritual) =>
         ritual._id === editedRitual._id ? editedRitual : ritual
       );
