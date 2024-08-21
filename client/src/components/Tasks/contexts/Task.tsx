@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { ReactNode, createContext, useEffect, useState } from "react";
 // import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { Importance } from "../../../constants";
@@ -49,6 +50,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const [timeFilterState, setTimeFilterState] = useState<SortingValues>();
 
   useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  function fetchTasks() {
     const controller = new AbortController();
     apiClient
       .get("/tasks", { signal: controller.signal })
@@ -61,38 +66,38 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       });
 
     return () => controller.abort();
-  }, []);
-
-  function addTask(task: Task) {
-    apiClient
-      .post("/tasks", task)
-      .then((res) => {
-        // Optimistic update
-        const data = res.data;
-        setTasks([...tasks, data]);
-      })
-      .catch((error) => console.log(error));
   }
 
-  function deleteTask(DeleteTask: Task) {
-    apiClient
-      .delete("/tasks", { data: { id: DeleteTask._id } })
-      .then(() => {
-        // Optimistic update
-        setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
-      })
-      .catch((error) => console.log(error));
+  async function addTask(task: Task) {
+    try {
+      await apiClient.post("/tasks", task);
+      setTasks([...tasks, task]);
+      fetchTasks();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function editTask(task: Task) {
-    apiClient
-      .put("/tasks", { id: task._id, ...task })
-      .then(() => {
-        // Optimistic update
-        const updatedTasks = tasks.map((t) => (t._id === task._id ? task : t));
-        setTasks(updatedTasks);
-      })
-      .catch((error) => console.log(error));
+  async function deleteTask(DeleteTask: Task) {
+    try {
+      await apiClient.delete(`/tasks/${DeleteTask._id}`);
+      setTasks(tasks.filter((task) => task._id !== DeleteTask._id));
+      fetchTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function editTask(task: Task) {
+    try {
+      const taskData = _.omit(task, ["_id", "_createdAt"]);
+      await apiClient.put(`/tasks/${task._id}`, taskData);
+      const updatedTasks = tasks.map((t) => (t._id === task._id ? task : t));
+      setTasks(updatedTasks);
+      fetchTasks();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function taskDone(editingTask: Task) {
@@ -102,7 +107,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       ...editingTask,
       done: newStatus,
       star: false,
-      finishedAt: new Date()
+      finishedAt: new Date() //TODO: condition the finishedAt to be added only if the task is marked as done, otherwise it should be null
     };
     editTask(taskChanged);
     // Optimistic update
