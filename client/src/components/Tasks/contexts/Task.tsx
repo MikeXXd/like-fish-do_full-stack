@@ -22,7 +22,7 @@ export interface Task {
   done: boolean;
   star: boolean;
   _createdAt: Date;
-  finishedAt?: Date;
+  finishedAt?: Date | null;
 }
 
 interface TasksContext {
@@ -107,7 +107,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       ...editingTask,
       done: newStatus,
       star: false,
-      finishedAt: new Date() //TODO: condition the finishedAt to be added only if the task is marked as done, otherwise it should be null
+      finishedAt: newStatus ? new Date() : null
     };
     editTask(taskChanged);
     // Optimistic update
