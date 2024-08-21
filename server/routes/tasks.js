@@ -1,24 +1,12 @@
 const auth = require("../middleware/auth");
+const checkValidObjectId = require("../middleware/checkValidObjectId");
 const express = require("express");
 const { Tasks, validate } = require("../db/models/task");
 const { isValidObjectId } = require("mongoose");
 
 const router = express.Router();
 
-
-//TODO: create a middleware to check if the id is valid like in delete 
-// router.use("/:id", checkValidObjectId);
-
-// async function checkValidObjectId(req, res, next) {
-//   try {
-//     if (!isValidObjectId(req.params.id)) {
-//       return res.status(400).json({ error: "Invalid id" });
-//     }
-//     next();
-//   } catch (error) {
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// }
+router.use("/:route/:id", checkValidObjectId); // check if the id is valid ObjectId
 
 router
   .route("/")
@@ -39,9 +27,9 @@ router
 router
   .route("/:id")
   .delete(auth, async (req, res) => {
-    if (!isValidObjectId(req.params.id)) {
-      res.status(400).json({ error: "Invalid id" });
-    }
+    // if (!isValidObjectId(req.params.id)) {
+    //   res.status(400).json({ error: "Invalid id" });
+    // }
     const deletedTask = await Tasks.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
       res.status(404).json({ error: "task not fonnd" });
@@ -49,9 +37,9 @@ router
     res.status(200).json({ message: "Task deleted successfully" });
   })
   .put(auth, async (req, res) => {
-    if (!isValidObjectId(req.params.id)) {
-      res.status(400).json({ error: "Invalid id" });
-    }
+    // if (!isValidObjectId(req.params.id)) {
+    //   res.status(400).json({ error: "Invalid id" });
+    // }
     const { title, importance, done, star, finishedAt } = req.body;
     const updatedTask = await Tasks.findByIdAndUpdate(
       { _id: req.params.id },

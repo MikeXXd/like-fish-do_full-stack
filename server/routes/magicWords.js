@@ -1,7 +1,10 @@
 const auth = require("../middleware/auth");
+const checkValidObjectId = require("../middleware/checkValidObjectId");
 const express = require("express");
 const { validate, Magic_Word } = require("../db/models/magicWord");
 const router = express.Router();
+
+router.use("/:route/:id", checkValidObjectId); // check if the id is valid ObjectId
 
 router
   .route("/")
